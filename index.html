@@ -260,6 +260,10 @@
     // Aplicación web de Google Apps Script que recibe las solicitudes
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdvA0UBcdwYYQP2xDZghZRigrnV3TI_aaLr5oeTHVZI1ggxWIJRz9asepbSuIv7YQF/exec";
 
+    // Webhook de n8n (workflow "Formulario → Correo + aviso WhatsApp").
+    // Para producción cambia "/webhook-test/" por "/webhook/" y activa el workflow.
+    const N8N_URL = "https://futuro-digital-pro-n8n.d4gkyh.easypanel.host/webhook-test/formulario-aviso";
+
     const form = document.getElementById("designForm");
     const btnSubmit = document.getElementById("btnSubmit");
     const statusMessage = document.getElementById("statusMessage");
@@ -321,6 +325,23 @@
       });
     }
 
+    // Envía el aviso a n8n y espera su confirmación. Devuelve true si llegó bien.
+    // Límite de 2 minutos para que el botón no se quede bloqueado si n8n no responde.
+    async function enviarAviso(datos) {
+      const control = new AbortController();
+      const limite = setTimeout(() => control.abort(), 120000);
+      try {
+        const res = await fetch(N8N_URL, { method: "POST", body: datos, signal: control.signal });
+        if (!res.ok) console.error("n8n respondió con estado", res.status);
+        return res.ok;
+      } catch (err) {
+        console.error("No se pudo avisar a n8n:", err);
+        return false;
+      } finally {
+        clearTimeout(limite);
+      }
+    }
+
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
@@ -342,6 +363,14 @@
       const acabadosCheckboxes = document.querySelectorAll('input[name="acabados"]:checked');
       const acabadosArr = Array.from(acabadosCheckboxes).map(cb => cb.value).join(", ");
       params.append("acabados", acabadosArr);
+
+      // Copia de los datos para n8n (correo + WhatsApp). Los archivos van como adjuntos reales.
+      const aviso = new FormData();
+      for (const [key, value] of params) aviso.append(key, value);
+      if (archivosSeleccionados.length > 0) {
+        aviso.append("archivos_adjuntos", archivosSeleccionados.map(f => f.name).join(", "));
+        archivosSeleccionados.forEach((f, i) => aviso.append(`archivo${i}`, f, f.name));
+      }
 
       // Archivos adjuntos (se envían todos juntos como una lista)
       const files = archivosSeleccionados;
@@ -372,10 +401,26 @@
         const res = await fetch(SCRIPT_URL, { method: "POST", body: params });
         const data = await res.json();
         if (!data.ok) throw new Error(data.error);
-        statusMessage.className = "status-success";
-        statusMessage.innerText = data.folio
-          ? `¡Solicitud registrada correctamente! Folio: ${data.folio}`
-          : "¡Solicitud registrada correctamente en Google Sheets!";
+
+        // Avisar a n8n (correo con adjuntos + WhatsApp). Solo se envía si Sheets registró la solicitud.
+        // El éxito se muestra hasta que n8n confirma que recibió los archivos.
+        if (data.folio) aviso.append("folio", data.folio);
+        btnSubmit.innerText = "Enviando archivos por correo...";
+        const avisoOk = await enviarAviso(aviso);
+
+        if (avisoOk) {
+          statusMessage.className = "status-success";
+          statusMessage.innerText = data.folio
+            ? `¡Solicitud registrada correctamente! Folio: ${data.folio}`
+            : "¡Solicitud registrada correctamente en Google Sheets!";
+        } else {
+          // La solicitud ya está en Sheets: no pedir que se reenvíe para no duplicarla
+          statusMessage.className = "status-error";
+          statusMessage.innerText = (data.folio
+            ? `La solicitud se registró con el folio ${data.folio}`
+            : "La solicitud se registró en Google Sheets") +
+            ", pero no se pudo enviar el aviso por correo y WhatsApp. No la vuelvas a enviar; avisa al área de diseño.";
+        }
         form.reset();
         archivosSeleccionados = [];
         mostrarArchivos();
