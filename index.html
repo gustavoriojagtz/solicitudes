@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <link rel="icon" type="image/png" href="icono-itex.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Solicitud y requerimientos de diseño</title>
@@ -87,11 +88,12 @@
 
       <div class="grid-2">
         <div class="form-group">
-          <label for="atendidoPor">Atendido por (Ejecutivo de Ventas) *</label>
+          <label for="atendidoPor">Atendido por: *</label>
           <select id="atendidoPor" name="atendidoPor" required>
             <option value="">Seleccione una opción...</option>
             <option value="Gustavo Rioja">Gustavo Rioja</option>
             <option value="Isabel Rivera">Isabel Rivera</option>
+	    <option value="Pamela de Lira">Pamela de Lira</option>
           </select>
         </div>
         <div class="form-group">
@@ -122,7 +124,7 @@
           <label for="tipoProyecto">Tipo de Proyecto *</label>
           <select id="tipoProyecto" name="tipoProyecto" required>
             <option value="">Seleccione una opción...</option>
-            <option value="Nuevo desde cero">Nuevo desde cero (desarrollo conceptual)</option>
+            <option value="Nuevo desde cero">Nuevo desde cero</option>
             <option value="Repetición">Repetición</option>
             <option value="Rediseño / Actualización">Rediseño / Actualización de diseño previo</option>
             <option value="Adaptación de archivos">Adaptación de archivos existentes del cliente</option>
@@ -160,10 +162,9 @@
           <input type="text" id="nombreProducto" name="nombreProducto" placeholder="Ej. Etiqueta Salsa Habanera 250ml" required />
         </div>
         <div class="form-group">
-          <label for="geometria">Geometría / Forma *</label>
+          <label for="geometria">Forma *</label>
           <select id="geometria" name="geometria" required>
             <option value="Rectangular / Cuadrada">Rectangular / Cuadrada</option>
-            <option value="Circular / Ovalada">Circular / Ovalada</option>
             <option value="Suaje con forma irregular">Suaje con forma irregular / especial</option>
           </select>
         </div>
@@ -196,9 +197,12 @@
           <label for="procesoImpresion">Proceso Estimado</label>
           <select id="procesoImpresion" name="procesoImpresion">
             <option value="Impresión Digital">Impresión Digital</option>
-            <option value="Offset Tradicional">Offset Tradicional</option>
+            <option value="Offset Tradicional">Offset</option>
             <option value="Flexografía">Flexografía</option>
             <option value="Serigrafía">Serigrafía</option>
+	    <option value="Bordada">Bordada</option>
+	    <option value="Hot Stamping">Hot Stamping</option>
+	    <option value="Snap">Snap</option>
             <option value="Por definir en taller">Por definir en taller</option>
           </select>
         </div>
@@ -217,7 +221,13 @@
           <label class="checkbox-item"><input type="checkbox" name="acabados" value="Laminado Brillante" /> Laminado Brillante</label>
           <label class="checkbox-item"><input type="checkbox" name="acabados" value="Hot Stamping / Foil" /> Hot Stamping / Foil</label>
           <label class="checkbox-item"><input type="checkbox" name="acabados" value="Grabado en Seco / Realce" /> Realce / Grabado en seco</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Suajado Especial" /> Suaje / Plecado especial</label>
+          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Suajado" /> Suaje</label>
+          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Pleca de doblez" /> Pleca de doblez</label>
+          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Pleca de perforado" /> Pleca de perforado</label>
+          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Engrapado" /> Engrapado</label>
+          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Engomado" /> Engomado</label>
+          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Pegado" /> Pegado</label>
+          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Ojillo" /> Ojillo</label>
         </div>
       </div>
 
