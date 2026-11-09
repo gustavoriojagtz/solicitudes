@@ -4,7 +4,7 @@
   <link rel="icon" type="image/png" href="icono-itex.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solicitud y requerimientos de diseño</title>
+  <title>Portal de Preprensa</title>
   <style>
     :root {
       --primary-color: #005596;
@@ -17,45 +17,39 @@
       --focus-ring: rgba(0, 85, 150, 0.2);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); padding: 30px 15px; display: flex; justify-content: center; }
-    .form-container { background-color: var(--card-bg); max-width: 800px; width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; border: 1px solid var(--border-color); }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 30px 15px; display: flex; justify-content: center; align-items: flex-start; }
+    .form-container { background-color: var(--card-bg); max-width: 600px; width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; border: 1px solid var(--border-color); }
     .form-header { background-color: var(--primary-color); color: #ffffff; padding: 24px 30px; display: flex; align-items: center; gap: 22px; }
     .header-logo img { max-height: 48px; width: auto; display: block; }
     .header-text h1 { font-size: 1.45rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.2; }
     .header-text p { font-size: 0.85rem; color: #cbd5e1; margin-top: 4px; }
-    form { padding: 30px; }
-    .section-title { font-size: 1.1rem; font-weight: 600; color: var(--primary-color); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 25px; margin-bottom: 18px; }
-    .section-title:first-of-type { margin-top: 0; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .contenido { padding: 30px; }
+    .section-title { font-size: 1.1rem; font-weight: 600; color: var(--primary-color); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 18px; }
     .form-group { margin-bottom: 16px; display: flex; flex-direction: column; }
     label { font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
-    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], input[type="file"], select, textarea { padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; outline: none; transition: all 0.2s ease; background-color: #fff; }
-    input[type="file"] { padding: 8px; background: #f8fafc; cursor: pointer; }
-    input:focus, select:focus, textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--focus-ring); }
-    textarea { resize: vertical; min-height: 80px; }
-    .checkbox-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 4px; }
-    .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: #334155; }
-    .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary-color); }
-    .btn-submit { background-color: var(--primary-color); color: white; font-size: 1rem; font-weight: 600; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 25px; transition: background 0.2s; }
+    input[type="password"], select { padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; outline: none; transition: all 0.2s ease; background-color: #fff; }
+    input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--focus-ring); }
+    .btn-submit { background-color: var(--primary-color); color: white; font-size: 1rem; font-weight: 600; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
     .btn-submit:hover { background-color: var(--primary-hover); }
     .btn-submit:disabled { background-color: #94a3b8; cursor: not-allowed; }
-    .file-picker { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: #f8fafc; }
-    .file-button { margin: 0; padding: 7px 14px; background: #fff; border: 1px solid var(--border-color); border-radius: 5px; font-size: 0.88rem; font-weight: 600; color: var(--primary-color); cursor: pointer; transition: background 0.2s; }
-    .file-button:hover { background: #e2e8f0; }
-    #contadorArchivos { font-size: 0.88rem; color: var(--text-muted); }
-    .file-list { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
-    .file-list li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 10px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; }
-    .file-list li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .file-list button { background: none; border: none; color: #991b1b; cursor: pointer; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
     #statusMessage { margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center; font-size: 0.9rem; display: none; }
     .status-success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
     .status-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .barra-sesion { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 30px; background: #f8fafc; border-bottom: 1px solid var(--border-color); font-size: 0.88rem; color: #334155; }
+    .link-btn { background: none; border: none; color: var(--primary-color); font-weight: 600; cursor: pointer; font-size: 0.88rem; text-decoration: none; padding: 0; }
+    .link-btn:hover { text-decoration: underline; }
+    .menu { display: grid; gap: 14px; }
+    .menu-opcion { display: block; text-decoration: none; color: inherit; border: 1px solid var(--border-color); border-radius: 10px; padding: 18px 20px; background: #fff; transition: all 0.2s ease; }
+    .menu-opcion:hover, .menu-opcion:focus-visible { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--focus-ring); outline: none; }
+    .menu-opcion .codigo { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; color: var(--text-muted); }
+    .menu-opcion strong { display: block; color: var(--primary-color); font-size: 1.05rem; margin-top: 2px; }
+    .menu-opcion p { font-size: 0.88rem; color: var(--text-muted); margin-top: 4px; }
+    .oculto { display: none !important; }
     @media (max-width: 650px) {
       .form-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
       body { padding: 10px; }
-      form { padding: 20px; }
+      .contenido { padding: 20px; }
+      .barra-sesion { padding: 12px 20px; }
     }
   </style>
 </head>
@@ -67,384 +61,142 @@
         <img src="https://raw.githubusercontent.com/gustavoriojagtz/Imagenes_Itex/main/itex%20logo%20nuevo%20fondo%20transparente%20letras%20blancas.png" alt="Logotipo Itex" />
       </div>
       <div class="header-text">
-        <h1>Solicitud y requerimientos de diseño</h1>
-        <p>Formato Oficial POE-PRP-F02 | Entrada de Datos para Producción Gráfica</p>
+        <h1>Portal de Preprensa</h1>
+        <p>Acceso del equipo | Formatos Oficiales POE-PRP</p>
       </div>
     </div>
 
-    <form id="designForm">
-      <!-- 1. DATOS GENERALES -->
-      <h2 class="section-title">1. Datos Generales de la Solicitud</h2>
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="fecha">Fecha de Solicitud *</label>
-          <input type="date" id="fecha" name="fecha" required />
-        </div>
-        <div class="form-group">
-          <label for="fechaRequerida">Fecha Requerida de Entrega</label>
-          <input type="date" id="fechaRequerida" name="fechaRequerida" />
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="atendidoPor">Atendido por: *</label>
-          <select id="atendidoPor" name="atendidoPor" required>
-            <option value="">Seleccione una opción...</option>
-            <option value="Gustavo Rioja">Gustavo Rioja</option>
-            <option value="Isabel Rivera">Isabel Rivera</option>
-	    <option value="Pamela de Lira">Pamela de Lira</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="cliente">Cliente / Razón Social *</label>
-          <input type="text" id="cliente" name="cliente" placeholder="Empresa o persona" required />
-        </div>
-      </div>
-
-      <div class="grid-3">
-        <div class="form-group">
-          <label for="contacto">Persona de Contacto</label>
-          <input type="text" id="contacto" name="contacto" placeholder="Nombre de contacto" />
-        </div>
-        <div class="form-group">
-          <label for="telefono">WhatsApp / Teléfono</label>
-          <input type="tel" id="telefono" name="telefono" placeholder="10 dígitos" />
-        </div>
-        <div class="form-group">
-          <label for="email">Correo Electrónico</label>
-          <input type="email" id="email" name="email" placeholder="cliente@correo.com" />
-        </div>
-      </div>
-
-      <!-- 2. ANTECEDENTES Y CLASIFICACIÓN -->
-      <h2 class="section-title">2. Clasificación del Trabajo y Antecedentes</h2>
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="tipoProyecto">Tipo de Proyecto *</label>
-          <select id="tipoProyecto" name="tipoProyecto" required>
-            <option value="">Seleccione una opción...</option>
-            <option value="Nuevo desde cero">Nuevo desde cero</option>
-            <option value="Repetición">Repetición</option>
-            <option value="Rediseño / Actualización">Rediseño / Actualización de diseño previo</option>
-            <option value="Adaptación de archivos">Adaptación de archivos existentes del cliente</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="materialProporcionado">¿El cliente entregó material base?</label>
-          <select id="materialProporcionado" name="materialProporcionado">
-            <option value="No proporciona base">No proporciona (diseñar desde cero)</option>
-            <option value="Descripción verbal">Descripción verbal</option>
-            <option value="Logotipo en vector">Logotipo en vector (.AI, .PDF, .CDR)</option>
-            <option value="Logotipo en imagen">Logotipo en imagen (JPG / PNG)</option>
-            <option value="Muestra física">Muestra física entregada en taller</option>
-            <option value="Boceto o fotos de referencia">Boceto o imágenes de referencia</option>
-          </select>
-        </div>
-      </div>
-
+    <!-- INICIO DE SESIÓN -->
+    <form id="loginForm" class="contenido oculto">
+      <h2 class="section-title">Iniciar sesión</h2>
       <div class="form-group">
-        <label for="archivo">Adjuntar Archivos de Referencia / Logo / Boceto (Opcional)</label>
-        <input type="file" id="archivo" multiple accept=".pdf,.png,.jpg,.jpeg,.ai,.cdr,.eps,.zip" hidden />
-        <div class="file-picker">
-          <label for="archivo" class="file-button">Elegir archivos</label>
-          <span id="contadorArchivos">Sin archivos seleccionados</span>
-        </div>
-        <small style="color: var(--text-muted); margin-top: 4px; font-size: 0.8rem;">Puedes agregar varios archivos, uno por uno o varios a la vez. Formatos aceptados: PDF, JPG, PNG, AI, CDR, EPS, ZIP. Máximo 10 MB en total.</small>
-        <ul id="listaArchivos" class="file-list"></ul>
+        <label for="nombre">Nombre *</label>
+        <select id="nombre" required>
+          <option value="">Cargando usuarios...</option>
+        </select>
       </div>
-
-      <!-- 3. ESPECIFICACIONES TÉCNICAS -->
-      <h2 class="section-title">3. Especificaciones Técnicas y Dimensiones</h2>
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="nombreProducto">Nombre de la Pieza o Producto *</label>
-          <input type="text" id="nombreProducto" name="nombreProducto" placeholder="Ej. Etiqueta Salsa Habanera 250ml" required />
-        </div>
-        <div class="form-group">
-          <label for="geometria">Forma *</label>
-          <select id="geometria" name="geometria" required>
-            <option value="Rectangular / Cuadrada">Rectangular / Cuadrada</option>
-            <option value="Suaje con forma irregular">Suaje con forma irregular / especial</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid-3">
-        <div class="form-group">
-          <label for="ancho">Ancho / Base (mm)</label>
-          <input type="number" step="0.1" id="ancho" name="ancho" placeholder="Ej. 100" />
-        </div>
-        <div class="form-group">
-          <label for="alto">Alto / Altura (mm)</label>
-          <input type="number" step="0.1" id="alto" name="alto" placeholder="Ej. 150" />
-        </div>
-        <div class="form-group">
-          <label for="cantidad">Tiraje / Cantidad *</label>
-          <input type="number" id="cantidad" name="cantidad" placeholder="Piezas requeridas" required />
-        </div>
-      </div>
-
       <div class="form-group">
-        <label for="sustrato">Sustrato / Material Solicitado *</label>
-        <input type="text" id="sustrato" name="sustrato" placeholder="Ej. BOPP Blanco, Couché 300g, Sulfatada 14 pts, etc." required />
+        <label for="pin">PIN *</label>
+        <input type="password" id="pin" inputmode="numeric" autocomplete="current-password" pattern="\d{4,8}" maxlength="8" placeholder="4 a 8 dígitos" required />
       </div>
-
-      <!-- 4. PROCESO Y ACABADOS -->
-      <h2 class="section-title">4. Proceso de Impresión y Acabados</h2>
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="procesoImpresion">Proceso Estimado</label>
-          <select id="procesoImpresion" name="procesoImpresion">
-            <option value="Impresión Digital">Impresión Digital</option>
-            <option value="Offset Tradicional">Offset</option>
-            <option value="Flexografía">Flexografía</option>
-            <option value="Serigrafía">Serigrafía</option>
-	    <option value="Bordada">Bordada</option>
-	    <option value="Hot Stamping">Hot Stamping</option>
-	    <option value="Snap">Snap</option>
-            <option value="Por definir en taller">Por definir en taller</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="tintas">Configuración de Tintas</label>
-          <input type="text" id="tintas" name="tintas" placeholder="Ej. CMYK, 1 tinta negra, o Códigos Pantone" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Acabados Especiales Requeridos</label>
-        <div class="checkbox-group">
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Barniz UV Brillante" /> Barniz UV Brillante</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Barniz UV a Registro" /> Barniz UV a Registro</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Laminado Mate" /> Laminado Mate</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Laminado Brillante" /> Laminado Brillante</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Hot Stamping / Foil" /> Hot Stamping / Foil</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Grabado en Seco / Realce" /> Realce / Grabado en seco</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Suajado" /> Suaje</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Pleca de doblez" /> Pleca de doblez</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Pleca de perforado" /> Pleca de perforado</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Engrapado" /> Engrapado</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Engomado" /> Engomado</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Pegado" /> Pegado</label>
-          <label class="checkbox-item"><input type="checkbox" name="acabados" value="Ojillo" /> Ojillo</label>
-        </div>
-      </div>
-
-      <!-- 5. DIRECCIÓN CREATIVA -->
-      <h2 class="section-title">5. Dirección Creativa y Preferencias</h2>
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="estiloVisual">Estilo Visual Solicitado</label>
-          <select id="estiloVisual" name="estiloVisual">
-            <option value="No especifica">No especifica</option>
-            <option value="Minimalista / Limpio">Minimalista / Limpio</option>
-            <option value="Corporativo / Sobrio">Corporativo / Sobrio</option>
-            <option value="Llamativo / Dinámico">Llamativo / Dinámico</option>
-            <option value="Tradicional / Clásico">Tradicional / Clásico</option>
-            <option value="Artesanal / Ecológico">Artesanal / Rústico</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="coloresRequeridos">Colores Obligatorios / Deseados</label>
-          <input type="text" id="coloresRequeridos" name="coloresRequeridos" placeholder="Ej. Azul marino y blanco" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="coloresProhibidos">Colores No Deseados / Prohibidos</label>
-        <input type="text" id="coloresProhibidos" name="coloresProhibidos" placeholder="Ej. No usar amarillos o rojos" />
-      </div>
-
-      <div class="form-group">
-        <label for="observaciones">Instrucciones Adicionales o Referencias</label>
-        <textarea id="observaciones" name="observaciones" placeholder="Indica detalles de marcas que le gustan al cliente, objetivo principal o comentarios sobre el archivo adjunto."></textarea>
-      </div>
-
-      <button type="submit" class="btn-submit" id="btnSubmit">Registrar Solicitud</button>
+      <button type="submit" class="btn-submit" id="btnEntrar">Entrar</button>
       <div id="statusMessage"></div>
     </form>
+
+    <!-- MENÚ -->
+    <div id="menu" class="oculto">
+      <div class="barra-sesion">
+        <span>Sesión: <strong id="nombreSesion"></strong></span>
+        <button type="button" class="link-btn" id="btnSalir">Cerrar sesión</button>
+      </div>
+      <div class="contenido">
+        <h2 class="section-title">¿Qué deseas hacer?</h2>
+        <nav class="menu">
+          <a class="menu-opcion" href="POE-PRP-F02.html">
+            <span class="codigo">POE-PRP-F02</span>
+            <strong>Solicitud y requerimientos de diseño</strong>
+            <p>Registrar una nueva solicitud de diseño.</p>
+          </a>
+          <a class="menu-opcion" href="POE-PRP-F03.html">
+            <span class="codigo">POE-PRP-F03</span>
+            <strong>Estatus de orden y liberación a producción</strong>
+            <p>Consultar y actualizar aprobaciones e insumos de cada orden.</p>
+          </a>
+        </nav>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Aplicación web de Google Apps Script que recibe las solicitudes
+    // Aplicación web de Google Apps Script (valida PIN y guarda datos)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdvA0UBcdwYYQP2xDZghZRigrnV3TI_aaLr5oeTHVZI1ggxWIJRz9asepbSuIv7YQF/exec";
+    const CLAVE_SESION = "itexSesion";
 
-    // Webhook de n8n (workflow "Formulario → Correo + aviso WhatsApp").
-    // URL de producción: requiere el workflow activo. Para pruebas en el editor usa "/webhook-test/".
-    const N8N_URL = "https://futuro-digital-pro-n8n.d4gkyh.easypanel.host/webhook/formulario-aviso";
-
-    const form = document.getElementById("designForm");
-    const btnSubmit = document.getElementById("btnSubmit");
+    const loginForm = document.getElementById("loginForm");
+    const menu = document.getElementById("menu");
+    const selNombre = document.getElementById("nombre");
+    const inputPin = document.getElementById("pin");
+    const btnEntrar = document.getElementById("btnEntrar");
     const statusMessage = document.getElementById("statusMessage");
-    const inputFile = document.getElementById("archivo");
-    const MAX_TOTAL_MB = 10;
-    const listaArchivos = document.getElementById("listaArchivos");
-    let archivosSeleccionados = [];
 
-    // Cada vez que se eligen archivos, se suman a la lista en vez de reemplazarla
-    inputFile.addEventListener("change", () => {
-      for (const f of inputFile.files) {
-        const repetido = archivosSeleccionados.some(a => a.name === f.name && a.size === f.size);
-        if (!repetido) archivosSeleccionados.push(f);
-      }
-      inputFile.value = "";
-      mostrarArchivos();
-    });
-
-    const contadorArchivos = document.getElementById("contadorArchivos");
-
-    function mostrarArchivos() {
-      const n = archivosSeleccionados.length;
-      contadorArchivos.textContent = n === 0 ? "Sin archivos seleccionados"
-        : n === 1 ? "1 archivo seleccionado"
-        : `${n} archivos seleccionados`;
-      listaArchivos.innerHTML = "";
-      archivosSeleccionados.forEach((f, i) => {
-        const li = document.createElement("li");
-        const nombre = document.createElement("span");
-        nombre.textContent = `${f.name} (${(f.size / 1024 / 1024).toFixed(2)} MB)`;
-        const quitar = document.createElement("button");
-        quitar.type = "button";
-        quitar.textContent = "Quitar";
-        quitar.addEventListener("click", () => {
-          archivosSeleccionados.splice(i, 1);
-          mostrarArchivos();
-        });
-        li.append(nombre, quitar);
-        listaArchivos.appendChild(li);
-      });
-    }
-
-    // Fecha de hoy en hora local (toISOString usa UTC y adelanta un día por la noche)
-    function hoyLocal() {
-      const d = new Date();
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const dd = String(d.getDate()).padStart(2, "0");
-      return `${d.getFullYear()}-${mm}-${dd}`;
-    }
-
-    document.getElementById("fecha").value = hoyLocal();
-
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = err => reject(err);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // Envía el aviso a n8n y espera su confirmación. Devuelve true si llegó bien.
-    // Límite de 2 minutos para que el botón no se quede bloqueado si n8n no responde.
-    async function enviarAviso(datos) {
-      const control = new AbortController();
-      const limite = setTimeout(() => control.abort(), 120000);
+    function leerSesion() {
       try {
-        const res = await fetch(N8N_URL, { method: "POST", body: datos, signal: control.signal });
-        if (!res.ok) console.error("n8n respondió con estado", res.status);
-        return res.ok;
+        const s = JSON.parse(localStorage.getItem(CLAVE_SESION) || "null");
+        return s && s.token && s.expira > Date.now() ? s : null;
+      } catch { return null; }
+    }
+
+    function guardarSesion(s) {
+      try { localStorage.setItem(CLAVE_SESION, JSON.stringify(s)); } catch {}
+    }
+
+    function borrarSesion() {
+      try { localStorage.removeItem(CLAVE_SESION); } catch {}
+    }
+
+    async function llamar(accion, datos = {}) {
+      const res = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams({ accion, ...datos }) });
+      const r = await res.json();
+      if (r.status !== "success") throw new Error(r.mensaje || "Error desconocido");
+      return r.data;
+    }
+
+    function mostrarMensaje(texto, tipo) {
+      statusMessage.className = tipo === "error" ? "status-error" : "status-success";
+      statusMessage.textContent = texto;
+      statusMessage.style.display = "block";
+    }
+
+    function mostrarMenu(sesion) {
+      document.getElementById("nombreSesion").textContent = sesion.nombre;
+      loginForm.classList.add("oculto");
+      menu.classList.remove("oculto");
+    }
+
+    async function mostrarLogin() {
+      menu.classList.add("oculto");
+      loginForm.classList.remove("oculto");
+      inputPin.value = "";
+      try {
+        const nombres = await llamar("usuarios");
+        selNombre.innerHTML = "";
+        selNombre.add(new Option(nombres.length ? "Seleccione su nombre..." : "No hay usuarios con PIN asignado", ""));
+        nombres.forEach(n => selNombre.add(new Option(n, n)));
       } catch (err) {
-        console.error("No se pudo avisar a n8n:", err);
-        return false;
-      } finally {
-        clearTimeout(limite);
+        console.error("No se pudo cargar la lista de usuarios:", err);
+        selNombre.innerHTML = "";
+        selNombre.add(new Option("No se pudo cargar la lista", ""));
+        mostrarMensaje("No se pudo cargar la lista de usuarios. Revisa tu conexión y recarga la página.", "error");
       }
     }
 
-    form.addEventListener("submit", async function (e) {
+    loginForm.addEventListener("submit", async e => {
       e.preventDefault();
-
-      btnSubmit.disabled = true;
-      btnSubmit.innerText = "Enviando datos a Google Sheets...";
+      btnEntrar.disabled = true;
+      btnEntrar.textContent = "Verificando...";
       statusMessage.style.display = "none";
-
-      // Empaquetar formulario en URLSearchParams (formato estándar aceptado siempre por Google)
-      const params = new URLSearchParams();
-      const formData = new FormData(form);
-
-      for (const [key, value] of formData.entries()) {
-        if (key !== "acabados") {
-          params.append(key, value);
-        }
-      }
-
-      // Acabados
-      const acabadosCheckboxes = document.querySelectorAll('input[name="acabados"]:checked');
-      const acabadosArr = Array.from(acabadosCheckboxes).map(cb => cb.value).join(", ");
-      params.append("acabados", acabadosArr);
-
-      // Copia de los datos para n8n (correo + WhatsApp). Los archivos van como adjuntos reales.
-      const aviso = new FormData();
-      for (const [key, value] of params) aviso.append(key, value);
-      if (archivosSeleccionados.length > 0) {
-        aviso.append("archivos_adjuntos", archivosSeleccionados.map(f => f.name).join(", "));
-        archivosSeleccionados.forEach((f, i) => aviso.append(`archivo${i}`, f, f.name));
-      }
-
-      // Archivos adjuntos (se envían todos juntos como una lista)
-      const files = archivosSeleccionados;
-      const totalBytes = files.reduce((sum, f) => sum + f.size, 0);
-      if (totalBytes > MAX_TOTAL_MB * 1024 * 1024) {
-        statusMessage.className = "status-error";
-        statusMessage.innerText = `Los archivos pesan ${(totalBytes / 1024 / 1024).toFixed(1)} MB en total. El máximo es ${MAX_TOTAL_MB} MB.`;
-        statusMessage.style.display = "block";
-        btnSubmit.disabled = false;
-        btnSubmit.innerText = "Registrar Solicitud";
-        return;
-      }
-      if (files.length > 0) {
-        try {
-          const lista = await Promise.all(files.map(async f => ({
-            name: f.name,
-            type: f.type,
-            data: await fileToBase64(f)
-          })));
-          params.append("files", JSON.stringify(lista));
-        } catch (err) {
-          console.error("Error al leer archivos:", err);
-        }
-      }
-
-      // Enviar a la Web App y verificar la respuesta del script
       try {
-        const res = await fetch(SCRIPT_URL, { method: "POST", body: params });
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error);
-
-        // Avisar a n8n (correo con adjuntos + WhatsApp). Solo se envía si Sheets registró la solicitud.
-        // El éxito se muestra hasta que n8n confirma que recibió los archivos.
-        if (data.folio) aviso.append("folio", data.folio);
-        btnSubmit.innerText = "Enviando archivos por correo...";
-        const avisoOk = await enviarAviso(aviso);
-
-        if (avisoOk) {
-          statusMessage.className = "status-success";
-          statusMessage.innerText = data.folio
-            ? `¡Solicitud registrada correctamente! Folio: ${data.folio}`
-            : "¡Solicitud registrada correctamente en Google Sheets!";
-        } else {
-          // La solicitud ya está en Sheets: no pedir que se reenvíe para no duplicarla
-          statusMessage.className = "status-error";
-          statusMessage.innerText = (data.folio
-            ? `La solicitud se registró con el folio ${data.folio}`
-            : "La solicitud se registró en Google Sheets") +
-            ", pero no se pudo enviar el aviso por correo y WhatsApp. No la vuelvas a enviar; avisa al área de diseño.";
-        }
-        form.reset();
-        archivosSeleccionados = [];
-        mostrarArchivos();
-        document.getElementById("fecha").value = hoyLocal();
+        const sesion = await llamar("login", { nombre: selNombre.value, pin: inputPin.value });
+        guardarSesion(sesion);
+        mostrarMenu(sesion);
       } catch (err) {
-        console.error("Error al registrar:", err);
-        statusMessage.className = "status-error";
-        statusMessage.innerText = "No se pudo registrar la solicitud. Intenta de nuevo.";
+        mostrarMensaje(err.message, "error");
+        inputPin.value = "";
+        inputPin.focus();
       } finally {
-        statusMessage.style.display = "block";
-        btnSubmit.disabled = false;
-        btnSubmit.innerText = "Registrar Solicitud";
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = "Entrar";
       }
     });
+
+    document.getElementById("btnSalir").addEventListener("click", () => {
+      borrarSesion();
+      mostrarLogin();
+    });
+
+    const sesionActual = leerSesion();
+    if (sesionActual) mostrarMenu(sesionActual);
+    else mostrarLogin();
   </script>
 </body>
 </html>

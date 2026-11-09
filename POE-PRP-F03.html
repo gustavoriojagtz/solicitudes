@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="icon" type="image/png" href="icono-itex.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estatus de orden y liberación a producción</title>
+  <style>
+    :root {
+      --primary-color: #005596;
+      --primary-hover: #003e6e;
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --focus-ring: rgba(0, 85, 150, 0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 30px 15px; display: flex; justify-content: center; }
+    .form-container { background-color: var(--card-bg); max-width: 800px; width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; border: 1px solid var(--border-color); }
+    .form-header { background-color: var(--primary-color); color: #ffffff; padding: 24px 30px; display: flex; align-items: center; gap: 22px; }
+    .header-logo img { max-height: 48px; width: auto; display: block; }
+    .header-text h1 { font-size: 1.45rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.2; }
+    .header-text p { font-size: 0.85rem; color: #cbd5e1; margin-top: 4px; }
+    .contenido { padding: 30px; }
+    .section-title { font-size: 1.1rem; font-weight: 600; color: var(--primary-color); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 25px; margin-bottom: 18px; }
+    .section-title:first-child { margin-top: 0; }
+    .form-group { margin-bottom: 16px; display: flex; flex-direction: column; }
+    label { font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
+    input[type="text"], textarea { padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; outline: none; transition: all 0.2s ease; background-color: #fff; }
+    input:focus, textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--focus-ring); }
+    textarea { resize: vertical; min-height: 70px; }
+    .btn-submit { background-color: var(--primary-color); color: white; font-size: 1rem; font-weight: 600; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
+    .btn-submit:hover { background-color: var(--primary-hover); }
+    .btn-submit:disabled { background-color: #94a3b8; cursor: not-allowed; }
+    #statusMessage { margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center; font-size: 0.9rem; display: none; }
+    .status-success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .status-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+    /* Barra de sesión */
+    .barra-sesion { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 30px; background: #f8fafc; border-bottom: 1px solid var(--border-color); font-size: 0.88rem; color: #334155; flex-wrap: wrap; }
+    .barra-sesion nav { display: flex; gap: 18px; }
+    .link-btn { background: none; border: none; color: var(--primary-color); font-weight: 600; cursor: pointer; font-size: 0.88rem; text-decoration: none; padding: 0; }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* Lista de órdenes */
+    .filtros { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+    .filtros input[type="text"] { flex: 1; min-width: 200px; }
+    .check { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 500; color: #334155; margin: 0; cursor: pointer; }
+    .check input { width: 16px; height: 16px; accent-color: var(--primary-color); }
+    .contador { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; }
+    .orden-lista { list-style: none; display: flex; flex-direction: column; gap: 6px; max-height: 340px; overflow-y: auto; padding: 2px; }
+    .orden-item { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: #fff; cursor: pointer; text-align: left; font-size: 0.88rem; color: var(--text-main); transition: all 0.2s ease; }
+    .orden-item:hover, .orden-item:focus-visible { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--focus-ring); outline: none; }
+    .orden-item.activa { border-color: var(--primary-color); background: #f0f7fc; }
+    .orden-item .folio { font-weight: 700; color: var(--primary-color); font-variant-numeric: tabular-nums; }
+    .orden-item .detalle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .orden-item .detalle small { color: var(--text-muted); }
+    .vacio { font-size: 0.88rem; color: var(--text-muted); padding: 12px; text-align: center; }
+
+    /* Estatus general */
+    .badge { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; white-space: nowrap; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+    .badge-listo { background: #dcfce7; color: #166534; }
+    .badge-cambios { background: #fee2e2; color: #991b1b; }
+    .badge-faltan { background: #fef3c7; color: #92400e; }
+    .badge-espera { background: #e0f2fe; color: #075985; }
+
+    /* Datos de la orden */
+    .resumen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 16px; padding: 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; }
+    .dato span { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+    .dato strong { display: block; font-size: 0.92rem; font-weight: 600; margin-top: 2px; word-break: break-word; }
+    .dato-ancho { grid-column: 1 / -1; }
+    .general-linea { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; font-size: 0.85rem; color: var(--text-muted); }
+    .general-linea .badge { font-size: 0.85rem; padding: 5px 12px; max-width: none; white-space: normal; }
+
+    /* Etapas */
+    .etapa { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; }
+    .etapa:last-child { border-bottom: none; }
+    .etapa-nombre { font-weight: 600; font-size: 0.92rem; color: #334155; }
+    .etapa.modificada .etapa-nombre::after { content: " · sin guardar"; color: #b45309; font-weight: 500; font-size: 0.8rem; }
+    .opciones { display: flex; flex-wrap: wrap; gap: 6px; }
+    .opciones input { position: absolute; opacity: 0; pointer-events: none; }
+    .opciones label { margin: 0; padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 999px; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--text-muted); background: #fff; transition: all 0.15s ease; }
+    .opciones label:hover { border-color: var(--primary-color); color: var(--primary-color); }
+    .opciones input:focus-visible + label { box-shadow: 0 0 0 3px var(--focus-ring); }
+    .opciones input:checked + label.tono-pendiente { background: #e2e8f0; border-color: #94a3b8; color: #334155; }
+    .opciones input:checked + label.tono-proceso { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+    .opciones input:checked + label.tono-listo { background: #dcfce7; border-color: #22c55e; color: #166534; }
+    .opciones input:checked + label.tono-na { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; text-decoration: line-through; }
+
+    .acciones { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .cargando { opacity: 0.5; pointer-events: none; }
+    .oculto { display: none !important; }
+
+    @media (max-width: 650px) {
+      .form-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      body { padding: 10px; }
+      .contenido { padding: 20px; }
+      .barra-sesion { padding: 12px 20px; }
+      .resumen { grid-template-columns: 1fr 1fr; }
+      .orden-item { grid-template-columns: auto 1fr; }
+      .orden-item .badge { grid-column: 1 / -1; justify-self: start; }
+      .etapa { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="form-header">
+      <div class="header-logo">
+        <img src="https://raw.githubusercontent.com/gustavoriojagtz/Imagenes_Itex/main/itex%20logo%20nuevo%20fondo%20transparente%20letras%20blancas.png" alt="Logotipo Itex" />
+      </div>
+      <div class="header-text">
+        <h1>Estatus de orden y liberación a producción</h1>
+        <p>Formato Oficial POE-PRP-F03 | Control de Aprobaciones e Insumos para Producción</p>
+      </div>
+    </div>
+
+    <div class="barra-sesion">
+      <span>Sesión: <strong id="nombreSesion"></strong></span>
+      <nav>
+        <a class="link-btn" href="index.html">Menú</a>
+        <button type="button" class="link-btn" id="btnSalir">Cerrar sesión</button>
+      </nav>
+    </div>
+
+    <div class="contenido">
+      <!-- 1. BUSCAR ORDEN -->
+      <h2 class="section-title">1. Seleccionar Orden</h2>
+      <div class="filtros">
+        <input type="text" id="filtro" placeholder="Buscar por folio, cliente o producto" autocomplete="off" />
+        <label class="check"><input type="checkbox" id="verTodas" /> Incluir listas para producción</label>
+      </div>
+      <div class="contador" id="contador">Cargando órdenes...</div>
+      <ul class="orden-lista" id="listaOrdenes"></ul>
+
+      <!-- 2-4. DETALLE DE LA ORDEN -->
+      <div id="panelOrden" class="oculto">
+        <h2 class="section-title">2. Datos de la Orden</h2>
+        <div class="resumen" id="resumen"></div>
+        <div class="general-linea">
+          Estatus general: <span class="badge" id="badgeGeneral"></span>
+          <span id="actualizado"></span>
+        </div>
+
+        <h2 class="section-title">3. Aprobaciones</h2>
+        <div id="grupoAprobaciones"></div>
+
+        <h2 class="section-title">4. Insumos</h2>
+        <div id="grupoInsumos"></div>
+
+        <div class="form-group" style="margin-top: 20px;">
+          <label for="comentario">Comentario (opcional)</label>
+          <textarea id="comentario" maxlength="500" placeholder="Ej. Placas solicitadas a proveedor, entrega estimada el viernes."></textarea>
+        </div>
+
+        <button type="button" class="btn-submit" id="btnGuardar" disabled>Guardar cambios</button>
+        <div class="acciones">
+          <button type="button" class="link-btn oculto" id="btnDescartar" style="margin-top: 10px;">Descartar cambios</button>
+        </div>
+      </div>
+
+      <div id="statusMessage"></div>
+    </div>
+  </div>
+
+  <script>
+    // Aplicación web de Google Apps Script (valida la sesión y guarda en Google Sheets)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdvA0UBcdwYYQP2xDZghZRigrnV3TI_aaLr5oeTHVZI1ggxWIJRz9asepbSuIv7YQF/exec";
+    const CLAVE_SESION = "itexSesion";
+    const LISTO_PRODUCCION = "Listo para producción";
+
+    // ---------- Sesión ----------
+    function leerSesion() {
+      try {
+        const s = JSON.parse(localStorage.getItem(CLAVE_SESION) || "null");
+        return s && s.token && s.expira > Date.now() ? s : null;
+      } catch { return null; }
+    }
+
+    function cerrarSesion() {
+      try { localStorage.removeItem(CLAVE_SESION); } catch {}
+      location.replace("index.html");
+    }
+
+    const sesion = leerSesion();
+    if (!sesion) {
+      location.replace("index.html");
+      throw new Error("Sin sesión: se redirige al inicio.");
+    }
+    document.getElementById("nombreSesion").textContent = sesion.nombre;
+    document.getElementById("btnSalir").addEventListener("click", cerrarSesion);
+
+    async function llamar(accion, datos = {}) {
+      const params = new URLSearchParams({ accion, token: sesion.token, ...datos });
+      const res = await fetch(SCRIPT_URL, { method: "POST", body: params });
+      const r = await res.json();
+      if (r.status !== "success") {
+        if (r.codigo === "SESION") setTimeout(cerrarSesion, 2500);
+        throw new Error(r.mensaje || "Error desconocido");
+      }
+      return r.data;
+    }
+
+    // ---------- Elementos ----------
+    const filtro = document.getElementById("filtro");
+    const verTodas = document.getElementById("verTodas");
+    const contador = document.getElementById("contador");
+    const listaOrdenes = document.getElementById("listaOrdenes");
+    const panelOrden = document.getElementById("panelOrden");
+    const btnGuardar = document.getElementById("btnGuardar");
+    const btnDescartar = document.getElementById("btnDescartar");
+    const comentario = document.getElementById("comentario");
+    const statusMessage = document.getElementById("statusMessage");
+
+    let ordenes = [];
+    let orden = null;   // orden abierta, tal como está guardada
+    let cambios = {};   // { claveEtapa: nuevoEstado } aún sin guardar
+
+    function mostrarMensaje(texto, tipo) {
+      statusMessage.className = tipo === "error" ? "status-error" : "status-success";
+      statusMessage.textContent = texto;
+      statusMessage.style.display = "block";
+    }
+
+    function ocultarMensaje() {
+      statusMessage.style.display = "none";
+    }
+
+    function claseGeneral(general) {
+      if (general === LISTO_PRODUCCION) return "badge badge-listo";
+      if (general.startsWith("Cambios")) return "badge badge-cambios";
+      if (general.startsWith("Faltan")) return "badge badge-faltan";
+      return "badge badge-espera";
+    }
+
+    function tono(etapa, estado) {
+      if (estado === "No aplica") return "tono-na";
+      if (etapa.listo.includes(estado)) return "tono-listo";
+      if (estado === "Pendiente") return "tono-pendiente";
+      return "tono-proceso";
+    }
+
+    function hayCambios() {
+      return Object.keys(cambios).length > 0;
+    }
+
+    // ---------- Lista de órdenes ----------
+    async function cargarOrdenes() {
+      try {
+        ordenes = await llamar("ordenes");
+        pintarLista();
+      } catch (err) {
+        console.error("No se pudieron cargar las órdenes:", err);
+        contador.textContent = "";
+        mostrarMensaje("No se pudieron cargar las órdenes: " + err.message, "error");
+      }
+    }
+
+    function pintarLista() {
+      const q = filtro.value.trim().toLowerCase();
+      const visibles = ordenes.filter(o =>
+        (verTodas.checked || o.general !== LISTO_PRODUCCION) &&
+        (!q || `${o.folio} ${o.cliente} ${o.producto}`.toLowerCase().includes(q)));
+
+      contador.textContent = visibles.length === 1 ? "1 orden" : `${visibles.length} órdenes`;
+      listaOrdenes.innerHTML = "";
+      if (!visibles.length) {
+        const li = document.createElement("li");
+        li.className = "vacio";
+        li.textContent = ordenes.length ? "No hay órdenes que coincidan con la búsqueda." : "Todavía no hay órdenes registradas.";
+        listaOrdenes.appendChild(li);
+        return;
+      }
+      visibles.forEach(o => {
+        const li = document.createElement("li");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "orden-item" + (orden && orden.folio === o.folio ? " activa" : "");
+
+        const folio = document.createElement("span");
+        folio.className = "folio";
+        folio.textContent = o.folio;
+
+        const detalle = document.createElement("span");
+        detalle.className = "detalle";
+        detalle.textContent = o.cliente || "Sin cliente";
+        if (o.producto) {
+          const prod = document.createElement("small");
+          prod.textContent = " · " + o.producto;
+          detalle.appendChild(prod);
+        }
+
+        const badge = document.createElement("span");
+        badge.className = claseGeneral(o.general);
+        badge.textContent = o.general;
+        badge.title = o.general;
+
+        btn.append(folio, detalle, badge);
+        btn.addEventListener("click", () => abrirOrden(o.folio));
+        li.appendChild(btn);
+        listaOrdenes.appendChild(li);
+      });
+    }
+
+    filtro.addEventListener("input", pintarLista);
+    verTodas.addEventListener("change", pintarLista);
+    // Enter con un folio escrito (ej. 0012-2026 o solo 12) abre la orden directamente
+    filtro.addEventListener("keydown", e => {
+      if (e.key === "Enter" && /^\d+(-\d{4})?$/.test(filtro.value.trim())) abrirOrden(filtro.value.trim());
+    });
+
+    // ---------- Detalle de la orden ----------
+    async function abrirOrden(folio) {
+      if (hayCambios() && !confirm("Tienes cambios sin guardar en esta orden. ¿Quieres descartarlos?")) return;
+      ocultarMensaje();
+      panelOrden.classList.add("cargando");
+      try {
+        orden = await llamar("orden", { folio });
+        cambios = {};
+        comentario.value = "";
+        pintarOrden();
+        pintarLista();
+        panelOrden.classList.remove("oculto");
+        panelOrden.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (err) {
+        mostrarMensaje(err.message, "error");
+      } finally {
+        panelOrden.classList.remove("cargando");
+      }
+    }
+
+    function pintarOrden() {
+      const resumen = document.getElementById("resumen");
+      resumen.innerHTML = "";
+      [
+        ["Folio", orden.folio], ["Cliente", orden.cliente], ["Producto", orden.producto],
+        ["Cantidad", orden.cantidad], ["Fecha requerida", orden.fechaRequerida], ["Atendido por", orden.atendidoPor],
+        ["Sustrato", orden.sustrato, true], ["Acabados", orden.acabados, true],
+      ].forEach(([etiqueta, valor, ancho]) => {
+        const div = document.createElement("div");
+        div.className = "dato" + (ancho ? " dato-ancho" : "");
+        const span = document.createElement("span");
+        span.textContent = etiqueta;
+        const strong = document.createElement("strong");
+        strong.textContent = valor || "—";
+        div.append(span, strong);
+        resumen.appendChild(div);
+      });
+
+      const badge = document.getElementById("badgeGeneral");
+      badge.className = claseGeneral(orden.general);
+      badge.textContent = orden.general;
+      document.getElementById("actualizado").textContent = orden.actualizado ? `Última actualización: ${orden.actualizado}` : "";
+
+      pintarGrupo("Aprobaciones", document.getElementById("grupoAprobaciones"));
+      pintarGrupo("Insumos", document.getElementById("grupoInsumos"));
+      actualizarBotones();
+    }
+
+    function pintarGrupo(grupo, contenedor) {
+      contenedor.innerHTML = "";
+      orden.etapas.filter(et => et.grupo === grupo).forEach(et => {
+        const fila = document.createElement("div");
+        fila.className = "etapa";
+
+        const nombre = document.createElement("div");
+        nombre.className = "etapa-nombre";
+        nombre.textContent = et.nombre;
+
+        const opciones = document.createElement("div");
+        opciones.className = "opciones";
+        opciones.setAttribute("role", "radiogroup");
+        opciones.setAttribute("aria-label", et.nombre);
+
+        et.opciones.forEach((op, i) => {
+          const id = `${et.clave}-${i}`;
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = et.clave;
+          input.id = id;
+          input.value = op;
+          input.checked = op === orden.estatus[et.clave];
+          input.addEventListener("change", () => {
+            if (op === orden.estatus[et.clave]) delete cambios[et.clave];
+            else cambios[et.clave] = op;
+            fila.classList.toggle("modificada", et.clave in cambios);
+            actualizarBotones();
+          });
+          const label = document.createElement("label");
+          label.htmlFor = id;
+          label.className = tono(et, op);
+          label.textContent = op;
+          opciones.append(input, label);
+        });
+
+        fila.append(nombre, opciones);
+        contenedor.appendChild(fila);
+      });
+    }
+
+    function actualizarBotones() {
+      const n = Object.keys(cambios).length;
+      btnGuardar.disabled = n === 0;
+      btnGuardar.textContent = n === 0 ? "Guardar cambios" : n === 1 ? "Guardar 1 cambio" : `Guardar ${n} cambios`;
+      btnDescartar.classList.toggle("oculto", n === 0);
+    }
+
+    btnDescartar.addEventListener("click", () => {
+      cambios = {};
+      pintarOrden();
+    });
+
+    btnGuardar.addEventListener("click", async () => {
+      if (!orden || !hayCambios()) return;
+      btnGuardar.disabled = true;
+      btnGuardar.textContent = "Guardando...";
+      ocultarMensaje();
+      try {
+        orden = await llamar("guardar", {
+          folio: orden.folio,
+          cambios: JSON.stringify(cambios),
+          comentario: comentario.value,
+        });
+        cambios = {};
+        comentario.value = "";
+        pintarOrden();
+        mostrarMensaje(`Cambios guardados en el folio ${orden.folio}. Estatus: ${orden.general}`, "success");
+        const enLista = ordenes.find(o => o.folio === orden.folio);
+        if (enLista) enLista.general = orden.general;
+        pintarLista();
+      } catch (err) {
+        mostrarMensaje("No se guardaron los cambios: " + err.message, "error");
+      } finally {
+        actualizarBotones();
+      }
+    });
+
+    // Aviso al salir con cambios sin guardar
+    window.addEventListener("beforeunload", e => {
+      if (hayCambios()) { e.preventDefault(); e.returnValue = ""; }
+    });
+
+    cargarOrdenes();
+  </script>
+</body>
+</html>
