@@ -28,13 +28,13 @@
     .section-title:first-child { margin-top: 0; }
     .form-group { margin-bottom: 16px; display: flex; flex-direction: column; }
     label { font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
-    input[type="text"], textarea { padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; outline: none; transition: all 0.2s ease; background-color: #fff; }
-    input:focus, textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--focus-ring); }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select, textarea { padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; outline: none; transition: all 0.2s ease; background-color: #fff; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px var(--focus-ring); }
     textarea { resize: vertical; min-height: 70px; }
     .btn-submit { background-color: var(--primary-color); color: white; font-size: 1rem; font-weight: 600; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
     .btn-submit:hover { background-color: var(--primary-hover); }
     .btn-submit:disabled { background-color: #94a3b8; cursor: not-allowed; }
-    #statusMessage { margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center; font-size: 0.9rem; display: none; }
+    #statusMessage, .mensaje { margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center; font-size: 0.9rem; display: none; }
     .status-success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
     .status-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
@@ -89,6 +89,23 @@
     .opciones input:checked + label.tono-listo { background: #dcfce7; border-color: #22c55e; color: #166534; }
     .opciones input:checked + label.tono-na { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; text-decoration: line-through; }
 
+    /* Corrección de datos de la solicitud */
+    .titulo-con-accion { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .titulo-con-accion .link-btn { font-size: 0.85rem; flex-shrink: 0; }
+    .form-datos { border: 1px solid var(--border-color); border-radius: 8px; padding: 18px 18px 6px; background: #f8fafc; }
+    .form-datos h3 { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin: 6px 0 12px; }
+    .form-datos h3:not(:first-child) { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; }
+    .grid-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    .grid-datos .ancho { grid-column: 1 / -1; }
+    .grid-datos .form-group.modificado label::after { content: " · modificado"; color: #b45309; font-weight: 500; font-size: 0.78rem; }
+    .checkbox-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 4px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.86rem; font-weight: 500; color: #334155; margin: 0; cursor: pointer; }
+    .checkbox-item input { width: 16px; height: 16px; accent-color: var(--primary-color); }
+    .botones-datos { display: flex; gap: 10px; margin: 6px 0 12px; }
+    .botones-datos .btn-submit { margin-top: 0; }
+    .btn-secundario { background: #fff; color: var(--primary-color); border: 1px solid var(--border-color); font-size: 1rem; font-weight: 600; padding: 14px 28px; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+    .btn-secundario:hover { background: #e2e8f0; }
+
     .acciones { display: flex; justify-content: flex-end; margin-top: 8px; }
     .cargando { opacity: 0.5; pointer-events: none; }
     .oculto { display: none !important; }
@@ -99,6 +116,8 @@
       .contenido { padding: 20px; }
       .barra-sesion { padding: 12px 20px; }
       .resumen { grid-template-columns: 1fr 1fr; }
+      .grid-datos { grid-template-columns: 1fr; }
+      .botones-datos { flex-direction: column-reverse; }
       .orden-item { grid-template-columns: auto 1fr; }
       .orden-item .badge { grid-column: 1 / -1; justify-self: start; }
       .etapa { flex-direction: column; align-items: flex-start; }
@@ -138,8 +157,25 @@
 
       <!-- 2-4. DETALLE DE LA ORDEN -->
       <div id="panelOrden" class="oculto">
-        <h2 class="section-title">2. Datos de la Orden</h2>
+        <h2 class="section-title titulo-con-accion">
+          <span>2. Datos de la Orden</span>
+          <button type="button" class="link-btn" id="btnEditarDatos">Corregir datos</button>
+        </h2>
         <div class="resumen" id="resumen"></div>
+
+        <!-- Corrección de los datos capturados en POE-PRP-F02 -->
+        <form id="formDatos" class="form-datos oculto" novalidate>
+          <div id="camposDatos"></div>
+          <div class="form-group">
+            <label for="motivoDatos">Motivo de la corrección (opcional)</label>
+            <input type="text" id="motivoDatos" maxlength="500" placeholder="Ej. El cliente cambió la cantidad" />
+          </div>
+          <div class="botones-datos">
+            <button type="button" class="btn-secundario" id="btnCancelarDatos">Cancelar</button>
+            <button type="submit" class="btn-submit" id="btnGuardarDatos" disabled>Guardar corrección</button>
+          </div>
+        </form>
+        <div id="mensajeDatos" class="mensaje"></div>
         <div class="general-linea">
           Estatus general: <span class="badge" id="badgeGeneral"></span>
           <span id="actualizado"></span>
@@ -215,18 +251,64 @@
     const comentario = document.getElementById("comentario");
     const statusMessage = document.getElementById("statusMessage");
 
-    let ordenes = [];
-    let orden = null;   // orden abierta, tal como está guardada
-    let cambios = {};   // { claveEtapa: nuevoEstado } aún sin guardar
+    const resumen = document.getElementById("resumen");
+    const formDatos = document.getElementById("formDatos");
+    const btnEditarDatos = document.getElementById("btnEditarDatos");
+    const btnGuardarDatos = document.getElementById("btnGuardarDatos");
+    const motivoDatos = document.getElementById("motivoDatos");
+    const mensajeDatos = document.getElementById("mensajeDatos");
 
-    function mostrarMensaje(texto, tipo) {
-      statusMessage.className = tipo === "error" ? "status-error" : "status-success";
-      statusMessage.textContent = texto;
-      statusMessage.style.display = "block";
+    let ordenes = [];
+    let orden = null;      // orden abierta, tal como está guardada
+    let cambios = {};      // { claveEtapa: nuevoEstado } aún sin guardar
+    let editando = false;  // formulario de corrección de datos abierto
+
+    // Campos de la solicitud que se pueden corregir. Las opciones deben ser iguales a las de POE-PRP-F02.
+    const CAMPOS = [
+      { seccion: "Datos generales" },
+      { c: "fecha", e: "Fecha de solicitud", t: "date", req: true },
+      { c: "fechaRequerida", e: "Fecha requerida de entrega", t: "date" },
+      { c: "atendidoPor", e: "Atendido por", t: "select", req: true, op: ["Gustavo Rioja", "Isabel Rivera", "Pamela de Lira"] },
+      { c: "cliente", e: "Cliente / Razón social", req: true },
+      { c: "contacto", e: "Persona de contacto" },
+      { c: "telefono", e: "WhatsApp / Teléfono", t: "tel" },
+      { c: "email", e: "Correo electrónico", t: "email", ancho: true },
+      { seccion: "Clasificación del trabajo" },
+      { c: "tipoProyecto", e: "Tipo de proyecto", t: "select", req: true,
+        op: ["Nuevo desde cero", "Repetición", "Rediseño / Actualización", "Adaptación de archivos"] },
+      { c: "materialProporcionado", e: "Material base del cliente", t: "select",
+        op: ["No proporciona base", "Descripción verbal", "Logotipo en vector", "Logotipo en imagen", "Muestra física", "Boceto o fotos de referencia"] },
+      { seccion: "Especificaciones técnicas" },
+      { c: "nombreProducto", e: "Nombre de la pieza o producto", req: true },
+      { c: "geometria", e: "Forma", t: "select", req: true, op: ["Rectangular / Cuadrada", "Suaje con forma irregular"] },
+      { c: "ancho", e: "Ancho / Base (mm)" },
+      { c: "alto", e: "Alto / Altura (mm)" },
+      { c: "cantidad", e: "Tiraje / Cantidad", req: true, numerico: true },
+      { c: "sustrato", e: "Sustrato / Material", req: true },
+      { seccion: "Proceso y acabados" },
+      { c: "procesoImpresion", e: "Proceso estimado", t: "select",
+        op: ["Impresión Digital", "Offset Tradicional", "Flexografía", "Serigrafía", "Bordada", "Hot Stamping", "Snap", "Por definir en taller"] },
+      { c: "tintas", e: "Configuración de tintas" },
+      { c: "acabados", e: "Acabados especiales", t: "checks", ancho: true,
+        op: ["Barniz UV Brillante", "Barniz UV a Registro", "Laminado Mate", "Laminado Brillante", "Hot Stamping / Foil",
+             "Grabado en Seco / Realce", "Suajado", "Pleca de doblez", "Pleca de perforado", "Engrapado", "Engomado", "Pegado", "Ojillo"] },
+      { seccion: "Dirección creativa" },
+      { c: "estiloVisual", e: "Estilo visual", t: "select",
+        op: ["No especifica", "Minimalista / Limpio", "Corporativo / Sobrio", "Llamativo / Dinámico", "Tradicional / Clásico", "Artesanal / Ecológico"] },
+      { c: "coloresRequeridos", e: "Colores obligatorios / deseados" },
+      { c: "coloresProhibidos", e: "Colores no deseados / prohibidos", ancho: true },
+      { c: "observaciones", e: "Instrucciones adicionales", t: "textarea", ancho: true },
+    ];
+
+    function mostrarMensaje(texto, tipo, el = statusMessage) {
+      el.className = "mensaje " + (tipo === "error" ? "status-error" : "status-success");
+      el.textContent = texto;
+      el.style.display = "block";
     }
 
     function ocultarMensaje() {
       statusMessage.style.display = "none";
+      mensajeDatos.style.display = "none";
     }
 
     function claseGeneral(general) {
@@ -244,7 +326,7 @@
     }
 
     function hayCambios() {
-      return Object.keys(cambios).length > 0;
+      return Object.keys(cambios).length > 0 || Object.keys(diffDatos()).length > 0;
     }
 
     // ---------- Lista de órdenes ----------
@@ -320,6 +402,7 @@
       try {
         orden = await llamar("orden", { folio });
         cambios = {};
+        cerrarEdicion();
         comentario.value = "";
         pintarOrden();
         pintarLista();
@@ -333,7 +416,6 @@
     }
 
     function pintarOrden() {
-      const resumen = document.getElementById("resumen");
       resumen.innerHTML = "";
       [
         ["Folio", orden.folio], ["Cliente", orden.cliente], ["Producto", orden.producto],
@@ -364,7 +446,7 @@
       contenedor.innerHTML = "";
       orden.etapas.filter(et => et.grupo === grupo).forEach(et => {
         const fila = document.createElement("div");
-        fila.className = "etapa";
+        fila.className = "etapa" + (et.clave in cambios ? " modificada" : "");
 
         const nombre = document.createElement("div");
         nombre.className = "etapa-nombre";
@@ -382,7 +464,7 @@
           input.name = et.clave;
           input.id = id;
           input.value = op;
-          input.checked = op === orden.estatus[et.clave];
+          input.checked = op === (cambios[et.clave] || orden.estatus[et.clave]);
           input.addEventListener("change", () => {
             if (op === orden.estatus[et.clave]) delete cambios[et.clave];
             else cambios[et.clave] = op;
@@ -435,6 +517,151 @@
         mostrarMensaje("No se guardaron los cambios: " + err.message, "error");
       } finally {
         actualizarBotones();
+      }
+    });
+
+    // ---------- Corrección de datos de la solicitud ----------
+    function construirFormulario() {
+      const cont = document.getElementById("camposDatos");
+      cont.innerHTML = "";
+      let grid = null;
+      CAMPOS.forEach(f => {
+        if (f.seccion) {
+          const h = document.createElement("h3");
+          h.textContent = f.seccion;
+          grid = document.createElement("div");
+          grid.className = "grid-datos";
+          cont.append(h, grid);
+          return;
+        }
+        const valor = (orden.datos && orden.datos[f.c]) || "";
+        const grupo = document.createElement("div");
+        grupo.className = "form-group" + (f.ancho ? " ancho" : "");
+        grupo.dataset.campo = f.c;
+        const label = document.createElement("label");
+        label.textContent = f.e + (f.req ? " *" : "");
+        let control;
+
+        if (f.t === "checks") {
+          control = document.createElement("div");
+          control.className = "checkbox-group";
+          const marcados = valor.split(",").map(s => s.trim()).filter(Boolean);
+          // Conserva valores antiguos que ya no estén en la lista
+          [...f.op, ...marcados.filter(m => !f.op.includes(m))].forEach(op => {
+            const item = document.createElement("label");
+            item.className = "checkbox-item";
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.value = op;
+            cb.checked = marcados.includes(op);
+            item.append(cb, " " + op);
+            control.appendChild(item);
+          });
+        } else if (f.t === "select") {
+          control = document.createElement("select");
+          if (!valor) control.add(new Option("Seleccione una opción...", ""));
+          const opciones = valor && !f.op.includes(valor) ? [...f.op, valor] : f.op;
+          opciones.forEach(op => control.add(new Option(op, op)));
+          control.value = valor;
+        } else if (f.t === "textarea") {
+          control = document.createElement("textarea");
+          control.value = valor;
+        } else {
+          control = document.createElement("input");
+          // Una fecha en otro formato se edita como texto para no perderla
+          const fechaValida = f.t !== "date" || !valor || /^\d{4}-\d{2}-\d{2}$/.test(valor);
+          control.type = fechaValida ? (f.t || "text") : "text";
+          if (f.numerico) control.inputMode = "numeric";
+          control.value = valor;
+        }
+        if (f.t !== "checks") {
+          control.id = "dato-" + f.c;
+          label.htmlFor = control.id;
+        }
+        grupo.append(label, control);
+        grid.appendChild(grupo);
+      });
+    }
+
+    function valorDe(grupo) {
+      if (grupo.querySelector(".checkbox-group")) {
+        return [...grupo.querySelectorAll("input:checked")].map(cb => cb.value).join(", ");
+      }
+      return grupo.querySelector("input, select, textarea").value.trim();
+    }
+
+    const normalizarLista = s => s.split(",").map(t => t.trim()).filter(Boolean).sort().join("|");
+
+    // { campo: valorNuevo } de lo que cambió respecto a lo guardado; marca los campos modificados
+    function diffDatos() {
+      if (!editando || !orden) return {};
+      const d = {};
+      document.querySelectorAll("#camposDatos .form-group").forEach(g => {
+        const c = g.dataset.campo;
+        const nuevo = valorDe(g);
+        const original = String((orden.datos && orden.datos[c]) || "").trim();
+        const igual = c === "acabados" ? normalizarLista(nuevo) === normalizarLista(original) : nuevo === original;
+        g.classList.toggle("modificado", !igual);
+        if (!igual) d[c] = nuevo;
+      });
+      return d;
+    }
+
+    function abrirEdicion() {
+      editando = true;
+      construirFormulario();
+      motivoDatos.value = "";
+      btnGuardarDatos.disabled = true;
+      ocultarMensaje();
+      formDatos.classList.remove("oculto");
+      resumen.classList.add("oculto");
+      btnEditarDatos.classList.add("oculto");
+    }
+
+    function cerrarEdicion() {
+      editando = false;
+      formDatos.classList.add("oculto");
+      resumen.classList.remove("oculto");
+      btnEditarDatos.classList.remove("oculto");
+    }
+
+    btnEditarDatos.addEventListener("click", abrirEdicion);
+
+    document.getElementById("btnCancelarDatos").addEventListener("click", () => {
+      if (Object.keys(diffDatos()).length && !confirm("¿Descartar la corrección sin guardar?")) return;
+      cerrarEdicion();
+    });
+
+    const revisarDatos = () => { btnGuardarDatos.disabled = Object.keys(diffDatos()).length === 0; };
+    formDatos.addEventListener("input", revisarDatos);
+    formDatos.addEventListener("change", revisarDatos);
+
+    formDatos.addEventListener("submit", async e => {
+      e.preventDefault();
+      const d = diffDatos();
+      if (!Object.keys(d).length) return;
+      const vacio = CAMPOS.find(f => f.req && f.c in d && !d[f.c]);
+      if (vacio) {
+        mostrarMensaje(`${vacio.e} no puede quedar vacío.`, "error", mensajeDatos);
+        return;
+      }
+      btnGuardarDatos.disabled = true;
+      btnGuardarDatos.textContent = "Guardando...";
+      ocultarMensaje();
+      try {
+        orden = await llamar("editar", { folio: orden.folio, datos: JSON.stringify(d), comentario: motivoDatos.value });
+        cerrarEdicion();
+        pintarOrden();
+        const n = Object.keys(d).length;
+        mostrarMensaje(`Corrección guardada en el folio ${orden.folio} (${n} ${n === 1 ? "campo" : "campos"}).`, "success", mensajeDatos);
+        const enLista = ordenes.find(o => o.folio === orden.folio);
+        if (enLista) Object.assign(enLista, { cliente: orden.cliente, producto: orden.producto, fechaRequerida: orden.fechaRequerida });
+        pintarLista();
+      } catch (err) {
+        mostrarMensaje("No se guardó la corrección: " + err.message, "error", mensajeDatos);
+      } finally {
+        btnGuardarDatos.textContent = "Guardar corrección";
+        revisarDatos();
       }
     });
 
