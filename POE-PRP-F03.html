@@ -43,8 +43,9 @@
     .barra-sesion nav { display: flex; gap: 18px; }
     .link-btn { background: none; border: none; color: var(--primary-color); font-weight: 600; cursor: pointer; font-size: 0.88rem; text-decoration: none; padding: 0; }
     .link-btn:hover { text-decoration: underline; }
+    .link-btn:disabled { color: #94a3b8; cursor: not-allowed; text-decoration: none; }
 
-    /* Lista de órdenes */
+    /* Listas (trabajos y órdenes) */
     .filtros { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
     .filtros input[type="text"] { flex: 1; min-width: 200px; }
     .check { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 500; color: #334155; margin: 0; cursor: pointer; }
@@ -65,8 +66,9 @@
     .badge-cambios { background: #fee2e2; color: #991b1b; }
     .badge-faltan { background: #fef3c7; color: #92400e; }
     .badge-espera { background: #e0f2fe; color: #075985; }
+    .badge-cerrada { background: #f1f5f9; color: #64748b; }
 
-    /* Datos de la orden */
+    /* Datos */
     .resumen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 16px; padding: 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; }
     .dato span { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
     .dato strong { display: block; font-size: 0.92rem; font-weight: 600; margin-top: 2px; word-break: break-word; }
@@ -88,16 +90,17 @@
     .opciones input:checked + label.tono-proceso { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
     .opciones input:checked + label.tono-listo { background: #dcfce7; border-color: #22c55e; color: #166534; }
     .opciones input:checked + label.tono-na { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; text-decoration: line-through; }
+    .opciones input:disabled + label { cursor: not-allowed; opacity: 0.5; }
 
-    /* Corrección de datos de la solicitud */
+    /* Formularios internos (corrección, revisión, nuevo pedido) */
     .titulo-con-accion { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
     .titulo-con-accion .link-btn { font-size: 0.85rem; flex-shrink: 0; }
-    .form-datos { border: 1px solid var(--border-color); border-radius: 8px; padding: 18px 18px 6px; background: #f8fafc; }
+    .form-datos { border: 1px solid var(--border-color); border-radius: 8px; padding: 18px 18px 6px; background: #f8fafc; margin-bottom: 14px; }
     .form-datos h3 { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin: 6px 0 12px; }
     .form-datos h3:not(:first-child) { margin-top: 14px; padding-top: 14px; border-top: 1px solid #e2e8f0; }
     .grid-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
     .grid-datos .ancho { grid-column: 1 / -1; }
-    .grid-datos .form-group.modificado label::after { content: " · modificado"; color: #b45309; font-weight: 500; font-size: 0.78rem; }
+    .form-group.modificado label::after { content: " · modificado"; color: #b45309; font-weight: 500; font-size: 0.78rem; }
     .checkbox-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 4px; }
     .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 0.86rem; font-weight: 500; color: #334155; margin: 0; cursor: pointer; }
     .checkbox-item input { width: 16px; height: 16px; accent-color: var(--primary-color); }
@@ -105,6 +108,30 @@
     .botones-datos .btn-submit { margin-top: 0; }
     .btn-secundario { background: #fff; color: var(--primary-color); border: 1px solid var(--border-color); font-size: 1rem; font-weight: 600; padding: 14px 28px; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
     .btn-secundario:hover { background: #e2e8f0; }
+    .nota { font-size: 0.84rem; color: #334155; background: #f0f7fc; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px 12px; margin-bottom: 14px; line-height: 1.45; }
+    .nota a { color: var(--primary-color); font-weight: 600; }
+
+    /* Tipo de pedido */
+    .tipos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .tipo { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; cursor: pointer; margin: 0; font-weight: 500; }
+    .tipo input { margin-top: 3px; accent-color: var(--primary-color); }
+    .tipo strong { display: block; font-size: 0.88rem; color: #334155; }
+    .tipo small { display: block; font-size: 0.78rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+    .tipo:has(input:checked) { border-color: var(--primary-color); background: #f0f7fc; }
+    .tipo:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
+
+    /* Orden de producción seleccionada */
+    .panel-op { border: 1px solid var(--primary-color); border-radius: 8px; padding: 18px; margin-top: 14px; }
+    .panel-op-cabecera { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .panel-op-cabecera h3 { font-size: 1.05rem; color: var(--primary-color); }
+    .panel-op-cabecera p { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+    .maquila { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .maquila-fila { display: grid; grid-template-columns: 190px 1fr; gap: 10px; align-items: center; }
+    .maquila-fila input[type="text"]:disabled { background: #f1f5f9; color: #94a3b8; }
+    .nota-maquila { font-size: 0.8rem; color: var(--text-muted); }
+    #tituloMaquila.modificado::after { content: " · sin guardar"; color: #b45309; font-weight: 500; text-transform: none; letter-spacing: 0; }
+    @media (max-width: 650px) { .maquila-fila { grid-template-columns: 1fr; gap: 4px; } }
+    .subtitulo { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin: 16px 0 4px; padding-top: 14px; border-top: 1px solid #e2e8f0; }
 
     .acciones { display: flex; justify-content: flex-end; margin-top: 8px; }
     .cargando { opacity: 0.5; pointer-events: none; }
@@ -116,7 +143,7 @@
       .contenido { padding: 20px; }
       .barra-sesion { padding: 12px 20px; }
       .resumen { grid-template-columns: 1fr 1fr; }
-      .grid-datos { grid-template-columns: 1fr; }
+      .grid-datos, .tipos { grid-template-columns: 1fr; }
       .botones-datos { flex-direction: column-reverse; }
       .orden-item { grid-template-columns: auto 1fr; }
       .orden-item .badge { grid-column: 1 / -1; justify-self: start; }
@@ -133,7 +160,7 @@
       </div>
       <div class="header-text">
         <h1>Estatus de orden y liberación a producción</h1>
-        <p>Formato Oficial POE-PRP-F03 | Control de Aprobaciones e Insumos para Producción</p>
+        <p>Formato Oficial POE-PRP-F03 | Control de Aprobaciones, Órdenes e Insumos para Producción</p>
       </div>
     </div>
 
@@ -141,25 +168,26 @@
       <span>Sesión: <strong id="nombreSesion"></strong></span>
       <nav>
         <a class="link-btn" href="index.html">Menú</a>
+        <a class="link-btn" href="POE-PRP-F04.html">Órdenes de producción</a>
         <button type="button" class="link-btn" id="btnSalir">Cerrar sesión</button>
       </nav>
     </div>
 
     <div class="contenido">
-      <!-- 1. BUSCAR ORDEN -->
-      <h2 class="section-title">1. Seleccionar Orden</h2>
+      <!-- 1. BUSCAR TRABAJO -->
+      <h2 class="section-title">1. Seleccionar Trabajo</h2>
       <div class="filtros">
         <input type="text" id="filtro" placeholder="Buscar por folio, cliente o producto" autocomplete="off" />
-        <label class="check"><input type="checkbox" id="verTodas" /> Incluir listas para producción</label>
+        <label class="check"><input type="checkbox" id="verTodas" /> Mostrar también los que no tienen pendientes</label>
       </div>
-      <div class="contador" id="contador">Cargando órdenes...</div>
+      <div class="contador" id="contador">Cargando trabajos...</div>
       <ul class="orden-lista" id="listaOrdenes"></ul>
 
-      <!-- 2-4. DETALLE DE LA ORDEN -->
       <div id="panelOrden" class="oculto">
+        <!-- 2. DATOS DEL TRABAJO -->
         <h2 class="section-title titulo-con-accion">
-          <span>2. Datos de la Orden</span>
-          <button type="button" class="link-btn" id="btnEditarDatos">Corregir datos</button>
+          <span>2. Datos del Trabajo</span>
+          <button type="button" class="link-btn" id="btnEditarDatos">Editar</button>
         </h2>
         <div class="resumen" id="resumen"></div>
 
@@ -168,7 +196,7 @@
           <div id="camposDatos"></div>
           <div class="form-group">
             <label for="motivoDatos">Motivo de la corrección (opcional)</label>
-            <input type="text" id="motivoDatos" maxlength="500" placeholder="Ej. El cliente cambió la cantidad" />
+            <input type="text" id="motivoDatos" maxlength="500" placeholder="Ej. Se capturó mal el teléfono" />
           </div>
           <div class="botones-datos">
             <button type="button" class="btn-secundario" id="btnCancelarDatos">Cancelar</button>
@@ -181,20 +209,167 @@
           <span id="actualizado"></span>
         </div>
 
-        <h2 class="section-title">3. Aprobaciones</h2>
+        <!-- 3. APROBACIONES DEL DISEÑO -->
+        <h2 class="section-title titulo-con-accion">
+          <span id="tituloAprobaciones">3. Aprobaciones del Diseño</span>
+          <button type="button" class="link-btn" id="btnNuevaRevision">Nueva revisión</button>
+        </h2>
+
+        <form id="formRevision" class="form-datos oculto" novalidate>
+          <p class="nota" id="notaRevision"></p>
+          <div class="form-group">
+            <label for="descRevision">¿Qué cambia en el diseño? *</label>
+            <textarea id="descRevision" maxlength="500" placeholder="Ej. Cambia el texto del contenido neto; tintas y medidas iguales."></textarea>
+          </div>
+          <div class="botones-datos">
+            <button type="button" class="btn-secundario" id="btnCancelarRevision">Cancelar</button>
+            <button type="submit" class="btn-submit" id="btnCrearRevision">Crear revisión</button>
+          </div>
+        </form>
+
         <div id="grupoAprobaciones"></div>
-
-        <h2 class="section-title">4. Insumos</h2>
-        <div id="grupoInsumos"></div>
-
-        <div class="form-group" style="margin-top: 20px;">
+        <div class="form-group" style="margin-top: 14px;">
           <label for="comentario">Comentario (opcional)</label>
-          <textarea id="comentario" maxlength="500" placeholder="Ej. Placas solicitadas a proveedor, entrega estimada el viernes."></textarea>
+          <textarea id="comentario" maxlength="500" placeholder="Ej. Se envió prueba de color por WhatsApp."></textarea>
         </div>
-
-        <button type="button" class="btn-submit" id="btnGuardar" disabled>Guardar cambios</button>
+        <button type="button" class="btn-submit" id="btnGuardar" disabled>Guardar aprobaciones</button>
         <div class="acciones">
           <button type="button" class="link-btn oculto" id="btnDescartar" style="margin-top: 10px;">Descartar cambios</button>
+        </div>
+        <div id="mensajeDiseno" class="mensaje"></div>
+
+        <!-- 4. ÓRDENES DE PRODUCCIÓN -->
+        <h2 class="section-title titulo-con-accion">
+          <span>4. Órdenes de Producción</span>
+          <button type="button" class="link-btn" id="btnNuevoPedido">+ Nuevo pedido</button>
+        </h2>
+
+        <form id="formPedido" class="form-datos oculto" novalidate>
+          <h3>Tipo de pedido</h3>
+          <div class="tipos" id="tiposPedido">
+            <label class="tipo"><input type="radio" name="tipoPedido" value="primera" />
+              <span><strong>Primer pedido</strong><small>Primera vez que se produce este trabajo.</small></span></label>
+            <label class="tipo"><input type="radio" name="tipoPedido" value="repeticion" />
+              <span><strong>Repetición sin cambios</strong><small>Mismo diseño y revisión; se reutiliza el herramental.</small></span></label>
+            <label class="tipo"><input type="radio" name="tipoPedido" value="cambios" />
+              <span><strong>Repetición con cambios menores</strong><small>Texto, color o ajuste que conserva medidas y suaje: nueva revisión.</small></span></label>
+            <label class="tipo"><input type="radio" name="tipoPedido" value="mayor" />
+              <span><strong>Cambio mayor</strong><small>Cambia tamaño, forma, suaje, tintas o sustrato: nuevo folio.</small></span></label>
+          </div>
+          <p class="nota" id="notaPedido"></p>
+
+          <div id="camposPedido">
+            <div class="form-group" id="grupoCambio">
+              <label for="descCambio">¿Qué cambia en el diseño? *</label>
+              <textarea id="descCambio" maxlength="500" placeholder="Ej. Nuevo código de barras y lote; todo lo demás igual."></textarea>
+            </div>
+            <div class="grid-datos">
+              <div class="form-group">
+                <label for="pedPrioridad">Prioridad *</label>
+                <select id="pedPrioridad">
+                  <option value="Urgencia">Urgencia</option>
+                  <option value="Alta">Alta</option>
+                  <option value="Normal" selected>Normal</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pedInicio">Fecha de inicio</label>
+                <input type="date" id="pedInicio" />
+              </div>
+              <div class="form-group">
+                <label for="pedCantidad">Cantidad *</label>
+                <input type="text" id="pedCantidad" inputmode="numeric" maxlength="100" />
+              </div>
+              <div class="form-group">
+                <label for="pedEntrega">Fecha de entrega</label>
+                <input type="date" id="pedEntrega" />
+              </div>
+              <div class="form-group">
+                <label for="pedOC">Orden de compra del cliente</label>
+                <input type="text" id="pedOC" maxlength="100" placeholder="Opcional" />
+              </div>
+              <div class="form-group ancho">
+                <label for="pedObs">Observaciones del pedido</label>
+                <textarea id="pedObs" maxlength="1000" placeholder="Ej. Entregar en dos parcialidades."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="botones-datos">
+            <button type="button" class="btn-secundario" id="btnCancelarPedido">Cancelar</button>
+            <button type="submit" class="btn-submit" id="btnCrearPedido">Generar orden de producción</button>
+          </div>
+        </form>
+
+        <div class="contador" id="contadorOPs"></div>
+        <ul class="orden-lista" id="listaOPs"></ul>
+        <div id="mensajeOP" class="mensaje"></div>
+
+        <div id="panelOP" class="panel-op oculto">
+          <div class="panel-op-cabecera">
+            <div>
+              <h3 id="opTitulo"></h3>
+              <p id="opSubtitulo"></p>
+            </div>
+            <a class="link-btn" id="opImprimir" href="#">Ver e imprimir (F04)</a>
+          </div>
+          <div class="general-linea" style="margin-top: 0;">
+            Estatus de la orden: <span class="badge" id="opBadge"></span>
+            <span id="opActualizado"></span>
+          </div>
+
+          <p class="subtitulo">Datos del pedido</p>
+          <div class="grid-datos" id="opDatos">
+            <div class="form-group" data-campo="prioridad">
+              <label for="opPrioridad">Prioridad *</label>
+              <select id="opPrioridad">
+                <option value="Urgencia">Urgencia</option>
+                <option value="Alta">Alta</option>
+                <option value="Normal">Normal</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+            <div class="form-group" data-campo="fechaInicio">
+              <label for="opInicio">Fecha de inicio</label>
+              <input type="date" id="opInicio" />
+            </div>
+            <div class="form-group" data-campo="cantidad">
+              <label for="opCantidad">Cantidad *</label>
+              <input type="text" id="opCantidad" inputmode="numeric" maxlength="100" />
+            </div>
+            <div class="form-group" data-campo="fechaEntrega">
+              <label for="opEntrega">Fecha de entrega</label>
+              <input type="date" id="opEntrega" />
+            </div>
+            <div class="form-group" data-campo="ocCliente">
+              <label for="opOC">Orden de compra del cliente</label>
+              <input type="text" id="opOC" maxlength="100" />
+            </div>
+            <div class="form-group ancho" data-campo="observaciones">
+              <label for="opObs">Observaciones del pedido</label>
+              <textarea id="opObs" maxlength="1000"></textarea>
+            </div>
+          </div>
+
+          <p class="subtitulo" id="tituloMaquila">Maquila</p>
+          <p class="nota-maquila">Marca los procesos que se mandan a hacer y anota el proveedor de cada uno.</p>
+          <div id="opMaquila" class="maquila"></div>
+
+          <p class="subtitulo">Estado de la orden</p>
+          <div id="opEstado"></div>
+
+          <p class="subtitulo">Insumos</p>
+          <div id="opInsumos"></div>
+          <button type="button" class="link-btn" id="btnVerNoAplica" style="margin-top: 8px;"></button>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label for="opComentario">Comentario (opcional)</label>
+            <textarea id="opComentario" maxlength="500" placeholder="Ej. Placas localizadas en anaquel 3, en buen estado."></textarea>
+          </div>
+          <button type="button" class="btn-submit" id="btnGuardarOP" disabled>Guardar cambios de la orden</button>
+          <div class="acciones">
+            <button type="button" class="link-btn oculto" id="btnDescartarOP" style="margin-top: 10px;">Descartar cambios</button>
+          </div>
         </div>
       </div>
 
@@ -216,8 +391,17 @@
       } catch { return null; }
     }
 
+    // Última lista conocida, para mostrarla al instante mientras llega la actualizada
+    const CLAVE_LISTA = "itexListaTrabajos";
+    function leerGuardado(clave) {
+      try { return JSON.parse(localStorage.getItem(clave) || "null"); } catch { return null; }
+    }
+    function guardarLista(clave, valor) {
+      try { localStorage.setItem(clave, JSON.stringify(valor)); } catch {}
+    }
+
     function cerrarSesion() {
-      try { localStorage.removeItem(CLAVE_SESION); } catch {}
+      try { ["itexSesion", "itexListaTrabajos", "itexListaOPs"].forEach(k => localStorage.removeItem(k)); } catch {}
       location.replace("index.html");
     }
 
@@ -240,28 +424,42 @@
       return r.data;
     }
 
-    // ---------- Elementos ----------
-    const filtro = document.getElementById("filtro");
-    const verTodas = document.getElementById("verTodas");
-    const contador = document.getElementById("contador");
-    const listaOrdenes = document.getElementById("listaOrdenes");
-    const panelOrden = document.getElementById("panelOrden");
-    const btnGuardar = document.getElementById("btnGuardar");
-    const btnDescartar = document.getElementById("btnDescartar");
-    const comentario = document.getElementById("comentario");
-    const statusMessage = document.getElementById("statusMessage");
+    const $ = id => document.getElementById(id);
 
-    const resumen = document.getElementById("resumen");
-    const formDatos = document.getElementById("formDatos");
-    const btnEditarDatos = document.getElementById("btnEditarDatos");
-    const btnGuardarDatos = document.getElementById("btnGuardarDatos");
-    const motivoDatos = document.getElementById("motivoDatos");
-    const mensajeDatos = document.getElementById("mensajeDatos");
+    // ---------- Elementos ----------
+    const filtro = $("filtro");
+    const verTodas = $("verTodas");
+    const contador = $("contador");
+    const listaOrdenes = $("listaOrdenes");
+    const panelOrden = $("panelOrden");
+    const btnGuardar = $("btnGuardar");
+    const btnDescartar = $("btnDescartar");
+    const comentario = $("comentario");
+    const statusMessage = $("statusMessage");
+
+    const resumen = $("resumen");
+    const formDatos = $("formDatos");
+    const btnEditarDatos = $("btnEditarDatos");
+    const btnGuardarDatos = $("btnGuardarDatos");
+    const motivoDatos = $("motivoDatos");
+    const mensajeDatos = $("mensajeDatos");
+    const mensajeDiseno = $("mensajeDiseno");
+    const mensajeOP = $("mensajeOP");
+
+    const formRevision = $("formRevision");
+    const formPedido = $("formPedido");
+    const panelOP = $("panelOP");
+    const btnGuardarOP = $("btnGuardarOP");
 
     let ordenes = [];
-    let orden = null;      // orden abierta, tal como está guardada
-    let cambios = {};      // { claveEtapa: nuevoEstado } aún sin guardar
+    let orden = null;      // trabajo abierto, tal como está guardado
+    let cambios = {};      // { claveEtapa: nuevoEstado } de aprobaciones aún sin guardar
     let editando = false;  // formulario de corrección de datos abierto
+    let opSel = null;      // orden de producción abierta
+    let cambiosOP = {};    // { claveInsumo | "estado": nuevoEstado } aún sin guardar
+
+    const ESTADO_OP = { clave: "estado", nombre: "Estado de la orden", listo: ["Terminada"],
+      tonos: { "Abierta": "tono-pendiente", "En producción": "tono-proceso", "Terminada": "tono-listo", "Cancelada": "tono-na" } };
 
     // Campos de la solicitud que se pueden corregir. Las opciones deben ser iguales a las de POE-PRP-F02.
     const CAMPOS = [
@@ -283,11 +481,10 @@
       { c: "geometria", e: "Forma", t: "select", req: true, op: ["Rectangular / Cuadrada", "Suaje con forma irregular"] },
       { c: "ancho", e: "Ancho / Base (mm)" },
       { c: "alto", e: "Alto / Altura (mm)" },
-      { c: "cantidad", e: "Tiraje / Cantidad", req: true, numerico: true },
       { c: "sustrato", e: "Sustrato / Material", req: true },
       { seccion: "Proceso y acabados" },
       { c: "procesoImpresion", e: "Proceso estimado", t: "select",
-        op: ["Impresión Digital", "Offset Tradicional", "Flexografía", "Serigrafía", "Bordada", "Hot Stamping", "Snap", "Por definir en taller"] },
+        op: ["Impresión Digital", "Offset Tradicional", "Flexografía", "Serigrafía", "Bordada", "Hot Stamping", "Snap", "Troquelado", "Por definir en taller"] },
       { c: "tintas", e: "Configuración de tintas" },
       { c: "acabados", e: "Acabados especiales", t: "checks", ancho: true,
         op: ["Barniz UV Brillante", "Barniz UV a Registro", "Laminado Mate", "Laminado Brillante", "Hot Stamping / Foil",
@@ -306,19 +503,20 @@
       el.style.display = "block";
     }
 
-    function ocultarMensaje() {
-      statusMessage.style.display = "none";
-      mensajeDatos.style.display = "none";
+    function ocultarMensajes() {
+      [statusMessage, mensajeDatos, mensajeDiseno, mensajeOP].forEach(el => { el.style.display = "none"; });
     }
 
     function claseGeneral(general) {
       if (general === LISTO_PRODUCCION) return "badge badge-listo";
       if (general.startsWith("Cambios")) return "badge badge-cambios";
       if (general.startsWith("Faltan")) return "badge badge-faltan";
+      if (["Terminada", "Cancelada", "Sin pedido abierto"].includes(general)) return "badge badge-cerrada";
       return "badge badge-espera";
     }
 
     function tono(etapa, estado) {
+      if (etapa.tonos && etapa.tonos[estado]) return etapa.tonos[estado];
       if (estado === "No aplica") return "tono-na";
       if (etapa.listo.includes(estado)) return "tono-listo";
       if (estado === "Pendiente") return "tono-pendiente";
@@ -326,88 +524,147 @@
     }
 
     function hayCambios() {
-      return Object.keys(cambios).length > 0 || Object.keys(diffDatos()).length > 0;
+      return Object.keys(cambios).length > 0 || Object.keys(diffDatos()).length > 0 ||
+        Object.keys(cambiosOP).length > 0 || Object.keys(diffDatosOP()).length > 0;
     }
 
-    // ---------- Lista de órdenes ----------
+    function hoyLocal() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    }
+
+    // Botones de estado tipo "píldora" para una lista de etapas o insumos
+    function pintarEtapas(contenedor, etapas, actual, pendientes, alCambiar, deshabilitado = false) {
+      contenedor.innerHTML = "";
+      etapas.forEach(et => {
+        const fila = document.createElement("div");
+        fila.className = "etapa" + (et.clave in pendientes ? " modificada" : "");
+        const nombre = document.createElement("div");
+        nombre.className = "etapa-nombre";
+        nombre.textContent = et.nombre;
+        const opciones = document.createElement("div");
+        opciones.className = "opciones";
+        opciones.setAttribute("role", "radiogroup");
+        opciones.setAttribute("aria-label", et.nombre);
+
+        et.opciones.forEach((op, i) => {
+          const id = `${contenedor.id}-${et.clave}-${i}`;
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = `${contenedor.id}-${et.clave}`;
+          input.id = id;
+          input.value = op;
+          input.disabled = deshabilitado;
+          input.checked = op === (pendientes[et.clave] || actual[et.clave]);
+          input.addEventListener("change", () => {
+            if (op === actual[et.clave]) delete pendientes[et.clave];
+            else pendientes[et.clave] = op;
+            fila.classList.toggle("modificada", et.clave in pendientes);
+            alCambiar();
+          });
+          const label = document.createElement("label");
+          label.htmlFor = id;
+          label.className = tono(et, op);
+          label.textContent = op;
+          opciones.append(input, label);
+        });
+        fila.append(nombre, opciones);
+        contenedor.appendChild(fila);
+      });
+    }
+
+    function itemLista(principal, texto, extra, general, activa, alClic) {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "orden-item" + (activa ? " activa" : "");
+      const folio = document.createElement("span");
+      folio.className = "folio";
+      folio.textContent = principal;
+      const detalle = document.createElement("span");
+      detalle.className = "detalle";
+      detalle.textContent = texto;
+      if (extra) {
+        const small = document.createElement("small");
+        small.textContent = " · " + extra;
+        detalle.appendChild(small);
+      }
+      const badge = document.createElement("span");
+      badge.className = claseGeneral(general);
+      badge.textContent = general;
+      badge.title = general;
+      btn.append(folio, detalle, badge);
+      btn.addEventListener("click", alClic);
+      li.appendChild(btn);
+      return li;
+    }
+
+    // ---------- Lista de trabajos ----------
     async function cargarOrdenes() {
+      const previa = leerGuardado(CLAVE_LISTA);
+      if (Array.isArray(previa)) {
+        ordenes = previa;
+        pintarLista();
+        contador.textContent += " · actualizando...";
+      }
       try {
         ordenes = await llamar("ordenes");
+        guardarLista(CLAVE_LISTA, ordenes);
         pintarLista();
       } catch (err) {
-        console.error("No se pudieron cargar las órdenes:", err);
-        contador.textContent = "";
-        mostrarMensaje("No se pudieron cargar las órdenes: " + err.message, "error");
+        console.error("No se pudieron cargar los trabajos:", err);
+        if (!Array.isArray(previa)) contador.textContent = "";
+        else pintarLista();
+        mostrarMensaje("No se pudo actualizar la lista de trabajos: " + err.message, "error");
       }
     }
 
     function pintarLista() {
       const q = filtro.value.trim().toLowerCase();
       const visibles = ordenes.filter(o =>
-        (verTodas.checked || o.general !== LISTO_PRODUCCION) &&
+        (verTodas.checked || o.pendiente) &&
         (!q || `${o.folio} ${o.cliente} ${o.producto}`.toLowerCase().includes(q)));
 
-      contador.textContent = visibles.length === 1 ? "1 orden" : `${visibles.length} órdenes`;
+      contador.textContent = visibles.length === 1 ? "1 trabajo" : `${visibles.length} trabajos`;
       listaOrdenes.innerHTML = "";
       if (!visibles.length) {
         const li = document.createElement("li");
         li.className = "vacio";
-        li.textContent = ordenes.length ? "No hay órdenes que coincidan con la búsqueda." : "Todavía no hay órdenes registradas.";
+        li.textContent = ordenes.length ? "No hay trabajos que coincidan con la búsqueda." : "Todavía no hay trabajos registrados.";
         listaOrdenes.appendChild(li);
         return;
       }
       visibles.forEach(o => {
-        const li = document.createElement("li");
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "orden-item" + (orden && orden.folio === o.folio ? " activa" : "");
-
-        const folio = document.createElement("span");
-        folio.className = "folio";
-        folio.textContent = o.folio;
-
-        const detalle = document.createElement("span");
-        detalle.className = "detalle";
-        detalle.textContent = o.cliente || "Sin cliente";
-        if (o.producto) {
-          const prod = document.createElement("small");
-          prod.textContent = " · " + o.producto;
-          detalle.appendChild(prod);
-        }
-
-        const badge = document.createElement("span");
-        badge.className = claseGeneral(o.general);
-        badge.textContent = o.general;
-        badge.title = o.general;
-
-        btn.append(folio, detalle, badge);
-        btn.addEventListener("click", () => abrirOrden(o.folio));
-        li.appendChild(btn);
-        listaOrdenes.appendChild(li);
+        const extra = [o.producto, o.ops ? (o.ops === 1 ? "1 OP" : `${o.ops} OP`) : "sin pedido"].filter(Boolean).join(" · ");
+        listaOrdenes.appendChild(itemLista(o.folio, o.cliente || "Sin cliente", extra, o.general,
+          orden && orden.folio === o.folio, () => abrirOrden(o.folio)));
       });
     }
 
     filtro.addEventListener("input", pintarLista);
     verTodas.addEventListener("change", pintarLista);
-    // Enter con un folio escrito (ej. 0012-2026 o solo 12) abre la orden directamente
+    // Enter con un folio escrito (ej. 0012-2026 o solo 12) abre el trabajo directamente
     filtro.addEventListener("keydown", e => {
       if (e.key === "Enter" && /^\d+(-\d{4})?$/.test(filtro.value.trim())) abrirOrden(filtro.value.trim());
     });
 
-    // ---------- Detalle de la orden ----------
-    async function abrirOrden(folio) {
-      if (hayCambios() && !confirm("Tienes cambios sin guardar en esta orden. ¿Quieres descartarlos?")) return;
-      ocultarMensaje();
+    // ---------- Detalle del trabajo ----------
+    async function abrirOrden(folio, op) {
+      if (hayCambios() && !confirm("Tienes cambios sin guardar. ¿Quieres descartarlos?")) return;
+      ocultarMensajes();
       panelOrden.classList.add("cargando");
       try {
         orden = await llamar("orden", { folio });
         cambios = {};
         cerrarEdicion();
+        cerrarFormularios();
+        cerrarOP();
         comentario.value = "";
         pintarOrden();
         pintarLista();
         panelOrden.classList.remove("oculto");
-        panelOrden.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (op) await abrirOP(op);
+        else panelOrden.scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (err) {
         mostrarMensaje(err.message, "error");
       } finally {
@@ -418,8 +675,9 @@
     function pintarOrden() {
       resumen.innerHTML = "";
       [
-        ["Folio", orden.folio], ["Cliente", orden.cliente], ["Producto", orden.producto],
-        ["Cantidad", orden.cantidad], ["Fecha requerida", orden.fechaRequerida], ["Atendido por", orden.atendidoPor],
+        ["Folio", orden.folio], ["Revisión vigente", orden.revision], ["Cliente", orden.cliente],
+        ["Producto", orden.producto, true], ["Fecha requerida", orden.fechaRequerida], ["Atendido por", orden.atendidoPor],
+        ["Órdenes de producción", orden.ordenes.length ? orden.ordenes.map(o => o.op).join(", ") : "Sin pedido"],
         ["Sustrato", orden.sustrato, true], ["Acabados", orden.acabados, true],
       ].forEach(([etiqueta, valor, ancho]) => {
         const div = document.createElement("div");
@@ -432,97 +690,423 @@
         resumen.appendChild(div);
       });
 
-      const badge = document.getElementById("badgeGeneral");
+      const badge = $("badgeGeneral");
       badge.className = claseGeneral(orden.general);
       badge.textContent = orden.general;
-      document.getElementById("actualizado").textContent = orden.actualizado ? `Última actualización: ${orden.actualizado}` : "";
+      $("actualizado").textContent = orden.actualizado ? `Última actualización: ${orden.actualizado}` : "";
 
-      pintarGrupo("Aprobaciones", document.getElementById("grupoAprobaciones"));
-      pintarGrupo("Insumos", document.getElementById("grupoInsumos"));
+      $("tituloAprobaciones").textContent = `3. Aprobaciones del Diseño · Rev ${orden.revision}`;
+      $("btnNuevaRevision").disabled = !orden.disenoAutorizado;
+      $("btnNuevaRevision").title = orden.disenoAutorizado ? "" : "Disponible cuando la revisión vigente esté autorizada por el cliente";
+      pintarEtapas($("grupoAprobaciones"), orden.etapas, orden.estatus, cambios, actualizarBotones);
+      pintarOPs();
       actualizarBotones();
-    }
-
-    function pintarGrupo(grupo, contenedor) {
-      contenedor.innerHTML = "";
-      orden.etapas.filter(et => et.grupo === grupo).forEach(et => {
-        const fila = document.createElement("div");
-        fila.className = "etapa" + (et.clave in cambios ? " modificada" : "");
-
-        const nombre = document.createElement("div");
-        nombre.className = "etapa-nombre";
-        nombre.textContent = et.nombre;
-
-        const opciones = document.createElement("div");
-        opciones.className = "opciones";
-        opciones.setAttribute("role", "radiogroup");
-        opciones.setAttribute("aria-label", et.nombre);
-
-        et.opciones.forEach((op, i) => {
-          const id = `${et.clave}-${i}`;
-          const input = document.createElement("input");
-          input.type = "radio";
-          input.name = et.clave;
-          input.id = id;
-          input.value = op;
-          input.checked = op === (cambios[et.clave] || orden.estatus[et.clave]);
-          input.addEventListener("change", () => {
-            if (op === orden.estatus[et.clave]) delete cambios[et.clave];
-            else cambios[et.clave] = op;
-            fila.classList.toggle("modificada", et.clave in cambios);
-            actualizarBotones();
-          });
-          const label = document.createElement("label");
-          label.htmlFor = id;
-          label.className = tono(et, op);
-          label.textContent = op;
-          opciones.append(input, label);
-        });
-
-        fila.append(nombre, opciones);
-        contenedor.appendChild(fila);
-      });
     }
 
     function actualizarBotones() {
       const n = Object.keys(cambios).length;
       btnGuardar.disabled = n === 0;
-      btnGuardar.textContent = n === 0 ? "Guardar cambios" : n === 1 ? "Guardar 1 cambio" : `Guardar ${n} cambios`;
+      btnGuardar.textContent = n === 0 ? "Guardar aprobaciones" : n === 1 ? "Guardar 1 cambio" : `Guardar ${n} cambios`;
       btnDescartar.classList.toggle("oculto", n === 0);
     }
 
     btnDescartar.addEventListener("click", () => {
       cambios = {};
-      pintarOrden();
+      pintarEtapas($("grupoAprobaciones"), orden.etapas, orden.estatus, cambios, actualizarBotones);
+      actualizarBotones();
     });
 
+    // Actualiza el trabajo en la lista sin volver a cargarla
+    function reflejarEnLista() {
+      const enLista = ordenes.find(o => o.folio === orden.folio);
+      if (enLista) Object.assign(enLista, {
+        cliente: orden.cliente, producto: orden.producto, fechaRequerida: orden.fechaRequerida,
+        general: orden.general, revision: orden.revision, ops: orden.ordenes.length,
+        pendiente: !["Listo para producción", "En producción", "Sin pedido abierto"].includes(orden.general),
+      });
+      guardarLista(CLAVE_LISTA, ordenes);
+      try { localStorage.removeItem("itexListaOPs"); } catch {} // la lista de F04 cambió: que se vuelva a pedir
+      pintarLista();
+    }
+
     btnGuardar.addEventListener("click", async () => {
-      if (!orden || !hayCambios()) return;
+      if (!orden || !Object.keys(cambios).length) return;
       btnGuardar.disabled = true;
       btnGuardar.textContent = "Guardando...";
-      ocultarMensaje();
+      ocultarMensajes();
       try {
-        orden = await llamar("guardar", {
-          folio: orden.folio,
-          cambios: JSON.stringify(cambios),
-          comentario: comentario.value,
-        });
+        orden = await llamar("guardar", { folio: orden.folio, cambios: JSON.stringify(cambios), comentario: comentario.value });
         cambios = {};
         comentario.value = "";
         pintarOrden();
-        mostrarMensaje(`Cambios guardados en el folio ${orden.folio}. Estatus: ${orden.general}`, "success");
-        const enLista = ordenes.find(o => o.folio === orden.folio);
-        if (enLista) enLista.general = orden.general;
-        pintarLista();
+        await refrescarOP();
+        mostrarMensaje(`Aprobaciones guardadas en el folio ${orden.folio}. Estatus: ${orden.general}`, "success", mensajeDiseno);
+        reflejarEnLista();
       } catch (err) {
-        mostrarMensaje("No se guardaron los cambios: " + err.message, "error");
+        mostrarMensaje("No se guardaron los cambios: " + err.message, "error", mensajeDiseno);
       } finally {
         actualizarBotones();
       }
     });
 
+    // ---------- Nueva revisión del diseño ----------
+    $("btnNuevaRevision").addEventListener("click", () => {
+      cerrarFormularios();
+      const siguiente = siguienteRevision(orden.revision);
+      $("notaRevision").textContent = `Se abrirá la revisión ${siguiente} del folio ${orden.folio}. ` +
+        "Úsala cuando el cliente pida un cambio menor a un diseño ya autorizado (texto, color, código) que conserve medidas, forma y suaje. " +
+        `Las aprobaciones vuelven a Pendiente: hay que enviar y autorizar de nuevo la Rev ${siguiente}. ` +
+        "Si cambia el tamaño, la forma, el suaje, las tintas o el sustrato, registra una solicitud nueva.";
+      $("descRevision").value = "";
+      formRevision.classList.remove("oculto");
+      $("descRevision").focus();
+    });
+
+    $("btnCancelarRevision").addEventListener("click", () => formRevision.classList.add("oculto"));
+
+    formRevision.addEventListener("submit", async e => {
+      e.preventDefault();
+      const descripcion = $("descRevision").value.trim();
+      if (!descripcion) { mostrarMensaje("Describe qué cambia en el diseño.", "error", mensajeDiseno); return; }
+      const btn = $("btnCrearRevision");
+      btn.disabled = true;
+      btn.textContent = "Creando...";
+      ocultarMensajes();
+      try {
+        orden = await llamar("revision", { folio: orden.folio, descripcion });
+        cambios = {};
+        formRevision.classList.add("oculto");
+        pintarOrden();
+        await refrescarOP();
+        mostrarMensaje(`Revisión ${orden.revision} creada. Envía el diseño al cliente y registra su autorización.`, "success", mensajeDiseno);
+        reflejarEnLista();
+      } catch (err) {
+        mostrarMensaje("No se creó la revisión: " + err.message, "error", mensajeDiseno);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Crear revisión";
+      }
+    });
+
+    function siguienteRevision(rev) {
+      const ch = String(rev || "A").toUpperCase().split("");
+      for (let i = ch.length - 1; i >= 0; i--) {
+        if (ch[i] !== "Z") { ch[i] = String.fromCharCode(ch[i].charCodeAt(0) + 1); return ch.join(""); }
+        ch[i] = "A";
+      }
+      return "A" + ch.join("");
+    }
+
+    // ---------- Órdenes de producción del trabajo ----------
+    function pintarOPs() {
+      const lista = $("listaOPs");
+      lista.innerHTML = "";
+      const ops = [...orden.ordenes].reverse();
+      $("contadorOPs").textContent = ops.length
+        ? (ops.length === 1 ? "1 orden de producción" : `${ops.length} órdenes de producción`)
+        : "";
+      if (!ops.length) {
+        const li = document.createElement("li");
+        li.className = "vacio";
+        li.textContent = "Este trabajo todavía no tiene pedidos: es solo solicitud de diseño. Cuando el cliente confirme, usa «+ Nuevo pedido».";
+        lista.appendChild(li);
+        return;
+      }
+      ops.forEach(o => {
+        const extra = [o.prioridad && o.prioridad !== "Normal" && `Prioridad ${o.prioridad.toLowerCase()}`,
+          o.cantidad && `${o.cantidad} pzas`, o.fechaEntrega && `entrega ${o.fechaEntrega}`].filter(Boolean).join(" · ");
+        lista.appendChild(itemLista(o.op, `Rev ${o.revision} · ${o.tipo}`, extra, o.general,
+          opSel && opSel.op === o.op, () => abrirOP(o.op)));
+      });
+    }
+
+    function cerrarFormularios() {
+      formRevision.classList.add("oculto");
+      formPedido.classList.add("oculto");
+    }
+
+    // ---------- Nuevo pedido ----------
+    const NOTAS_PEDIDO = {
+      primera: () => "La orden incluye solo los insumos que corresponden al proceso, la forma y los acabados capturados en la solicitud; todos inician en Pendiente.",
+      repeticion: () => `Se produce la revisión vigente (Rev ${orden.revision}) sin volver a diseñar ni autorizar. ` +
+        "El herramental (negativos, placas, suaje, grabados y marcos) inicia en «Reutilizar, verificar estado»: localízalo y revisa que no esté dañado antes de liberar.",
+      cambios: () => orden.disenoAutorizado
+        ? `Se abrirá la revisión ${siguienteRevision(orden.revision)} y esta orden quedará ligada a ella. ` +
+          "El diseño debe enviarse y autorizarse de nuevo antes de liberar. Los insumos inician en Pendiente para revisar qué herramental se rehace."
+        : `La revisión ${orden.revision} aún no está autorizada. Registra los ajustes con «Cambios solicitados» en la sección 3; no hace falta abrir revisión.`,
+      mayor: () => null,
+    };
+
+    $("btnNuevoPedido").addEventListener("click", () => {
+      cerrarFormularios();
+      const ultima = orden.ordenes[orden.ordenes.length - 1];
+      const tipo = orden.ordenes.length ? "repeticion" : "primera";
+      formPedido.querySelector(`input[value="${tipo}"]`).checked = true;
+      formPedido.querySelector('input[value="cambios"]').disabled = !orden.disenoAutorizado;
+      $("pedPrioridad").value = "Normal";
+      $("pedInicio").value = hoyLocal();
+      $("pedCantidad").value = (ultima && ultima.cantidad) || orden.cantidad || "";
+      $("pedEntrega").value = "";
+      $("pedEntrega").min = hoyLocal();
+      $("pedOC").value = "";
+      $("pedObs").value = "";
+      $("descCambio").value = "";
+      actualizarPedido();
+      formPedido.classList.remove("oculto");
+      formPedido.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    function tipoPedido() {
+      const r = formPedido.querySelector('input[name="tipoPedido"]:checked');
+      return r ? r.value : "";
+    }
+
+    function actualizarPedido() {
+      const tipo = tipoPedido();
+      const nota = $("notaPedido");
+      nota.innerHTML = "";
+      if (tipo === "mayor") {
+        nota.append("Si cambia el tamaño, la forma, el suaje, el número de tintas o el sustrato, el herramental actual ya no sirve y es otro trabajo. ");
+        const a = document.createElement("a");
+        a.href = `POE-PRP-F02.html?base=${encodeURIComponent(orden.folio)}`;
+        a.textContent = `Registrar solicitud nueva basada en el folio ${orden.folio}`;
+        nota.appendChild(a);
+      } else {
+        nota.textContent = NOTAS_PEDIDO[tipo] ? NOTAS_PEDIDO[tipo]() : "";
+      }
+      $("camposPedido").classList.toggle("oculto", tipo === "mayor");
+      $("btnCrearPedido").classList.toggle("oculto", tipo === "mayor");
+      $("grupoCambio").classList.toggle("oculto", tipo !== "cambios");
+    }
+
+    $("tiposPedido").addEventListener("change", actualizarPedido);
+    $("btnCancelarPedido").addEventListener("click", () => formPedido.classList.add("oculto"));
+
+    formPedido.addEventListener("submit", async e => {
+      e.preventDefault();
+      const tipo = tipoPedido();
+      if (!tipo || tipo === "mayor") return;
+      const datos = {
+        folio: orden.folio, tipo,
+        prioridad: $("pedPrioridad").value,
+        fechaInicio: $("pedInicio").value,
+        cantidad: $("pedCantidad").value.trim(),
+        fechaEntrega: $("pedEntrega").value,
+        ocCliente: $("pedOC").value.trim(),
+        observaciones: $("pedObs").value.trim(),
+        descripcionCambio: $("descCambio").value.trim(),
+      };
+      if (!datos.cantidad) { mostrarMensaje("Escribe la cantidad del pedido.", "error", mensajeOP); return; }
+      if (datos.fechaInicio && datos.fechaEntrega && datos.fechaInicio > datos.fechaEntrega) {
+        mostrarMensaje("La fecha de inicio no puede ser posterior a la fecha de entrega.", "error", mensajeOP);
+        return;
+      }
+      if (tipo === "cambios" && !datos.descripcionCambio) { mostrarMensaje("Describe qué cambia en el diseño.", "error", mensajeOP); return; }
+      const btn = $("btnCrearPedido");
+      btn.disabled = true;
+      btn.textContent = "Generando...";
+      ocultarMensajes();
+      try {
+        const op = await llamar("nuevaOP", datos);
+        formPedido.classList.add("oculto");
+        orden = op.trabajo;
+        cambios = {};
+        mostrarOP(op);
+        pintarOrden();
+        reflejarEnLista();
+        mostrarMensaje(`Orden ${op.op} creada para el folio ${orden.folio} (Rev ${op.revision}).`, "success", mensajeOP);
+      } catch (err) {
+        mostrarMensaje("No se generó la orden: " + err.message, "error", mensajeOP);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Generar orden de producción";
+      }
+    });
+
+    // ---------- Orden de producción seleccionada ----------
+    async function abrirOP(numero, conservarMensajes) {
+      if (!conservarMensajes && (Object.keys(cambiosOP).length || Object.keys(diffDatosOP()).length) &&
+          !confirm("Tienes cambios sin guardar en la orden abierta. ¿Quieres descartarlos?")) return;
+      if (!conservarMensajes) ocultarMensajes();
+      panelOP.classList.add("cargando");
+      try {
+        const op = await llamar("op", { op: numero });
+        mostrarOP(op);
+        if (!conservarMensajes) panelOP.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (err) {
+        mostrarMensaje(err.message, "error", mensajeOP);
+      } finally {
+        panelOP.classList.remove("cargando");
+      }
+    }
+
+    // Vuelve a leer la orden abierta (su estatus depende del diseño), salvo que tenga cambios sin guardar
+    async function refrescarOP() {
+      if (opSel && !Object.keys(cambiosOP).length && !Object.keys(diffDatosOP()).length) await abrirOP(opSel.op, true);
+    }
+
+    let verNoAplica = false;
+    $("btnVerNoAplica").addEventListener("click", () => {
+      verNoAplica = !verNoAplica;
+      pintarOP();
+    });
+
+    function mostrarOP(op) {
+      opSel = op;
+      cambiosOP = {};
+      verNoAplica = false;
+      $("opTitulo").textContent = op.op;
+      $("opSubtitulo").textContent = `Folio ${op.folio} · Rev ${op.revision} · ${op.tipo} · Pedido ${op.fechaPedido}` +
+        (op.creadaPor ? ` · Creada por ${op.creadaPor}` : "");
+      $("opImprimir").href = `POE-PRP-F04.html?op=${encodeURIComponent(op.op)}`;
+      $("opPrioridad").value = op.prioridad || "Normal";
+      $("opInicio").value = /^\d{4}-\d{2}-\d{2}$/.test(op.fechaInicio) ? op.fechaInicio : "";
+      $("opCantidad").value = op.cantidad || "";
+      $("opEntrega").value = /^\d{4}-\d{2}-\d{2}$/.test(op.fechaEntrega) ? op.fechaEntrega : "";
+      $("opOC").value = op.ocCliente || "";
+      $("opObs").value = op.observaciones || "";
+      $("opComentario").value = "";
+      pintarMaquila();
+      pintarOP();
+      panelOP.classList.remove("oculto");
+      pintarOPs();
+    }
+
+    function pintarOP() {
+      const badge = $("opBadge");
+      badge.className = claseGeneral(opSel.general);
+      badge.textContent = opSel.general;
+      $("opActualizado").textContent = opSel.actualizado ? `Última actualización: ${opSel.actualizado}` : "";
+      const cerrada = ["Terminada", "Cancelada"].includes(opSel.estado);
+      pintarEtapas($("opEstado"), [{ ...ESTADO_OP, opciones: opSel.estados }], { estado: opSel.estado }, cambiosOP, actualizarBotonesOP);
+      // Solo se muestran los insumos que lleva el trabajo; los "No aplica" quedan ocultos
+      const visibles = opSel.insumosDef.filter(et => verNoAplica || (cambiosOP[et.clave] || opSel.insumos[et.clave]) !== "No aplica");
+      const ocultos = opSel.insumosDef.length - visibles.length;
+      pintarEtapas($("opInsumos"), visibles, opSel.insumos, cambiosOP, actualizarBotonesOP, cerrada && !("estado" in cambiosOP));
+      if (!visibles.length) $("opInsumos").innerHTML = '<p class="vacio">Esta orden no requiere insumos.</p>';
+      const btnVer = $("btnVerNoAplica");
+      btnVer.textContent = verNoAplica ? "Ocultar los que no aplican" : `Mostrar los que no aplican (${ocultos})`;
+      btnVer.classList.toggle("oculto", !verNoAplica && ocultos === 0);
+      diffDatosOP();
+      actualizarBotonesOP();
+    }
+
+    function cerrarOP() {
+      opSel = null;
+      cambiosOP = {};
+      panelOP.classList.add("oculto");
+    }
+
+    const CAMPOS_OP = { prioridad: "opPrioridad", fechaInicio: "opInicio", cantidad: "opCantidad", fechaEntrega: "opEntrega", ocCliente: "opOC", observaciones: "opObs" };
+
+    function diffDatosOP() {
+      if (!opSel) return {};
+      const d = {};
+      Object.entries(CAMPOS_OP).forEach(([c, id]) => {
+        const el = $(id);
+        const nuevo = el.value.trim();
+        const original = String(opSel[c] || "").trim();
+        const esFecha = c === "fechaEntrega" || c === "fechaInicio";
+        const igual = esFecha && !/^\d{4}-\d{2}-\d{2}$/.test(original) ? !nuevo : nuevo === original;
+        el.closest(".form-group").classList.toggle("modificado", !igual);
+        if (!igual) d[c] = nuevo;
+      });
+      const maquila = textoMaquila();
+      const maquilaCambio = maquila !== (opSel.maquila || "");
+      $("tituloMaquila").classList.toggle("modificado", maquilaCambio);
+      if (maquilaCambio) d.maquila = maquila;
+      return d;
+    }
+
+    // ---------- Maquila: procesos que se mandan a hacer y su proveedor ----------
+    function pintarMaquila() {
+      const cont = $("opMaquila");
+      cont.innerHTML = "";
+      (opSel.maquilasDef || []).forEach((proceso, i) => {
+        const actual = (opSel.maquilaLista || []).find(m => m.proceso === proceso);
+        const fila = document.createElement("div");
+        fila.className = "maquila-fila";
+        fila.dataset.proceso = proceso;
+        const etiqueta = document.createElement("label");
+        etiqueta.className = "checkbox-item";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.id = "maq-" + i;
+        cb.checked = !!actual;
+        etiqueta.append(cb, " " + proceso);
+        const prov = document.createElement("input");
+        prov.type = "text";
+        prov.maxLength = 80;
+        prov.placeholder = "Proveedor";
+        prov.setAttribute("aria-label", "Proveedor de " + proceso);
+        prov.value = actual ? actual.proveedor : "";
+        prov.disabled = !cb.checked;
+        cb.addEventListener("change", () => {
+          prov.disabled = !cb.checked;
+          if (cb.checked) prov.focus();
+        });
+        fila.append(etiqueta, prov);
+        cont.appendChild(fila);
+      });
+    }
+
+    // Mismo formato que guarda el Apps Script: "Imp. digital: Proveedor A | Laminado: Proveedor B"
+    function textoMaquila() {
+      return [...document.querySelectorAll("#opMaquila .maquila-fila")]
+        .filter(f => f.querySelector('input[type="checkbox"]').checked)
+        .map(f => {
+          const prov = f.querySelector('input[type="text"]').value.trim().replace(/\|/g, "/").slice(0, 80);
+          return f.dataset.proceso + (prov ? ": " + prov : "");
+        }).join(" | ");
+    }
+
+    $("opMaquila").addEventListener("input", actualizarBotonesOP);
+    $("opMaquila").addEventListener("change", actualizarBotonesOP);
+
+    function actualizarBotonesOP() {
+      const n = Object.keys(cambiosOP).length + Object.keys(diffDatosOP()).length;
+      btnGuardarOP.disabled = n === 0;
+      btnGuardarOP.textContent = n === 0 ? "Guardar cambios de la orden" : n === 1 ? "Guardar 1 cambio" : `Guardar ${n} cambios`;
+      $("btnDescartarOP").classList.toggle("oculto", n === 0);
+    }
+
+    $("opDatos").addEventListener("input", actualizarBotonesOP);
+    $("opDatos").addEventListener("change", actualizarBotonesOP);
+    // Al cambiar el estado de la orden se vuelven a pintar los insumos (se bloquean si queda cerrada)
+    $("opEstado").addEventListener("change", () => {
+      const cerrada = ["Terminada", "Cancelada"].includes(cambiosOP.estado || opSel.estado);
+      $("opInsumos").querySelectorAll("input").forEach(i => { i.disabled = cerrada; });
+    });
+
+    $("btnDescartarOP").addEventListener("click", () => mostrarOP(opSel));
+
+    btnGuardarOP.addEventListener("click", async () => {
+      if (!opSel) return;
+      const datos = diffDatosOP();
+      if ("cantidad" in datos && !datos.cantidad) { mostrarMensaje("La cantidad no puede quedar vacía.", "error", mensajeOP); return; }
+      if (cambiosOP.estado === "Cancelada" && !confirm(`¿Cancelar la orden ${opSel.op}? Quedará en el historial, pero ya no contará como pedido.`)) return;
+      btnGuardarOP.disabled = true;
+      btnGuardarOP.textContent = "Guardando...";
+      ocultarMensajes();
+      try {
+        const op = await llamar("guardarOP", {
+          op: opSel.op, cambios: JSON.stringify(cambiosOP), datos: JSON.stringify(datos), comentario: $("opComentario").value,
+        });
+        orden = op.trabajo;
+        mostrarOP(op);
+        pintarOrden();
+        reflejarEnLista();
+        mostrarMensaje(`Orden ${op.op} actualizada. Estatus: ${op.general}`, "success", mensajeOP);
+      } catch (err) {
+        mostrarMensaje("No se guardaron los cambios: " + err.message, "error", mensajeOP);
+      } finally {
+        actualizarBotonesOP();
+      }
+    });
+
     // ---------- Corrección de datos de la solicitud ----------
     function construirFormulario() {
-      const cont = document.getElementById("camposDatos");
+      const cont = $("camposDatos");
       cont.innerHTML = "";
       let grid = null;
       CAMPOS.forEach(f => {
@@ -612,7 +1196,7 @@
       construirFormulario();
       motivoDatos.value = "";
       btnGuardarDatos.disabled = true;
-      ocultarMensaje();
+      ocultarMensajes();
       formDatos.classList.remove("oculto");
       resumen.classList.add("oculto");
       btnEditarDatos.classList.add("oculto");
@@ -627,7 +1211,7 @@
 
     btnEditarDatos.addEventListener("click", abrirEdicion);
 
-    document.getElementById("btnCancelarDatos").addEventListener("click", () => {
+    $("btnCancelarDatos").addEventListener("click", () => {
       if (Object.keys(diffDatos()).length && !confirm("¿Descartar la corrección sin guardar?")) return;
       cerrarEdicion();
     });
@@ -647,16 +1231,14 @@
       }
       btnGuardarDatos.disabled = true;
       btnGuardarDatos.textContent = "Guardando...";
-      ocultarMensaje();
+      ocultarMensajes();
       try {
         orden = await llamar("editar", { folio: orden.folio, datos: JSON.stringify(d), comentario: motivoDatos.value });
         cerrarEdicion();
         pintarOrden();
         const n = Object.keys(d).length;
         mostrarMensaje(`Corrección guardada en el folio ${orden.folio} (${n} ${n === 1 ? "campo" : "campos"}).`, "success", mensajeDatos);
-        const enLista = ordenes.find(o => o.folio === orden.folio);
-        if (enLista) Object.assign(enLista, { cliente: orden.cliente, producto: orden.producto, fechaRequerida: orden.fechaRequerida });
-        pintarLista();
+        reflejarEnLista();
       } catch (err) {
         mostrarMensaje("No se guardó la corrección: " + err.message, "error", mensajeDatos);
       } finally {
@@ -670,7 +1252,10 @@
       if (hayCambios()) { e.preventDefault(); e.returnValue = ""; }
     });
 
+    // ?folio=0027-2026 (y opcionalmente &op=OP-0003-2026) abre el trabajo directamente
+    const params = new URLSearchParams(location.search);
     cargarOrdenes();
+    if (params.get("folio")) abrirOrden(params.get("folio"), params.get("op"));
   </script>
 </body>
 </html>

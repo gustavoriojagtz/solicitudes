@@ -100,7 +100,12 @@
           <a class="menu-opcion" href="POE-PRP-F03.html">
             <span class="codigo">POE-PRP-F03</span>
             <strong>Estatus de orden y liberación a producción</strong>
-            <p>Consultar y actualizar aprobaciones e insumos de cada orden.</p>
+            <p>Aprobaciones del diseño, nuevos pedidos (también repeticiones) e insumos de cada orden.</p>
+          </a>
+          <a class="menu-opcion" href="POE-PRP-F04.html">
+            <span class="codigo">POE-PRP-F04</span>
+            <strong>Orden de producción</strong>
+            <p>Consultar e imprimir órdenes de producción.</p>
           </a>
         </nav>
       </div>
@@ -131,7 +136,18 @@
     }
 
     function borrarSesion() {
-      try { localStorage.removeItem(CLAVE_SESION); } catch {}
+      try { [CLAVE_SESION, "itexListaTrabajos", "itexListaOPs"].forEach(k => localStorage.removeItem(k)); } catch {}
+    }
+
+    // Mientras el usuario elige una opción del menú, se piden las listas de F03 y F04 en segundo plano.
+    // Así el script ya está "despierto" y las páginas muestran la lista al instante.
+    function precargar(sesion) {
+      [["ordenes", "itexListaTrabajos"], ["ops", "itexListaOPs"]].forEach(([accion, clave]) => {
+        fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams({ accion, token: sesion.token }) })
+          .then(res => res.json())
+          .then(r => { if (r.status === "success") localStorage.setItem(clave, JSON.stringify(r.data)); })
+          .catch(err => console.warn("No se pudo precargar " + accion + ":", err));
+      });
     }
 
     async function llamar(accion, datos = {}) {
@@ -151,6 +167,7 @@
       document.getElementById("nombreSesion").textContent = sesion.nombre;
       loginForm.classList.add("oculto");
       menu.classList.remove("oculto");
+      precargar(sesion);
     }
 
     async function mostrarLogin() {
