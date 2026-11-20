@@ -127,6 +127,8 @@
     .panel-op-cabecera p { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
     .maquila { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
     .maquila-fila { display: grid; grid-template-columns: 190px 1fr; gap: 10px; align-items: center; }
+    .maquila-campos { display: flex; gap: 8px; }
+    .maquila-campos input { flex: 1; min-width: 0; }
     .maquila-fila input[type="text"]:disabled { background: #f1f5f9; color: #94a3b8; }
     .nota-maquila { font-size: 0.8rem; color: var(--text-muted); }
     #tituloMaquila.modificado::after { content: " · sin guardar"; color: #b45309; font-weight: 500; text-transform: none; letter-spacing: 0; }
@@ -1041,22 +1043,43 @@
         prov.setAttribute("aria-label", "Proveedor de " + proceso);
         prov.value = actual ? actual.proveedor : "";
         prov.disabled = !cb.checked;
+        // "Otro" lleva además un campo para escribir qué se manda a hacer
+        let detalle = null;
+        if (proceso === "Otro") {
+          detalle = document.createElement("input");
+          detalle.type = "text";
+          detalle.className = "maquila-detalle";
+          detalle.maxLength = 60;
+          detalle.placeholder = "¿Qué se manda a hacer?";
+          detalle.setAttribute("aria-label", "Otro proceso de maquila");
+          detalle.value = actual ? actual.detalle || "" : "";
+          detalle.disabled = !cb.checked;
+        }
         cb.addEventListener("change", () => {
           prov.disabled = !cb.checked;
-          if (cb.checked) prov.focus();
+          if (detalle) detalle.disabled = !cb.checked;
+          if (cb.checked) (detalle || prov).focus();
         });
-        fila.append(etiqueta, prov);
+        const campos = document.createElement("div");
+        campos.className = "maquila-campos";
+        if (detalle) campos.appendChild(detalle);
+        campos.appendChild(prov);
+        fila.append(etiqueta, campos);
         cont.appendChild(fila);
       });
     }
 
-    // Mismo formato que guarda el Apps Script: "Imp. digital: Proveedor A | Laminado: Proveedor B"
+    // Mismo formato que guarda el Apps Script: "Imp. digital: Proveedor A | Otro (Etiquetado): Proveedor B"
     function textoMaquila() {
+      const limpio = t => t.replace(/[|:()]/g, " ").replace(/\s+/g, " ").trim().slice(0, 60);
       return [...document.querySelectorAll("#opMaquila .maquila-fila")]
         .filter(f => f.querySelector('input[type="checkbox"]').checked)
         .map(f => {
-          const prov = f.querySelector('input[type="text"]').value.trim().replace(/\|/g, "/").slice(0, 80);
-          return f.dataset.proceso + (prov ? ": " + prov : "");
+          const det = f.querySelector(".maquila-detalle");
+          const textos = f.querySelectorAll('.maquila-campos input[type="text"]');
+          const prov = textos[textos.length - 1].value.trim().replace(/\|/g, "/").slice(0, 80);
+          const nombre = det && limpio(det.value) ? `Otro (${limpio(det.value)})` : f.dataset.proceso;
+          return nombre + (prov ? ": " + prov : "");
         }).join(" | ");
     }
 

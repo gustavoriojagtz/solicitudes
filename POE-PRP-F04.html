@@ -529,11 +529,17 @@
 
       // Maquila: procesos que se mandan a hacer (se capturan en F03) y el proveedor de cada uno
       const maquila = o.maquilaLista || [];
-      const proveedores = maquila.map(m => `${m.proceso}: ${m.proveedor || "____________"}`).join(" · ");
+      const nombreMaquila = m => m.proceso === "Otro" && m.detalle ? `Otro (${m.detalle})` : m.proceso;
+      const proveedores = maquila.map(m => `${nombreMaquila(m)}: ${m.proveedor || "____________"}`).join(" · ");
+      // La opción "Otro" lleva escrito qué se manda a hacer, o una línea para llenarlo a mano
+      const otro = maquila.find(m => m.proceso === "Otro");
+      const opcionesMaquila = (o.maquilasDef || ["Imp. digital", "Suaje", "Barniz a registro", "Laminado", "Folio", "Otro"])
+        .map(p => p === "Otro" ? `Otro: ${otro && otro.detalle ? otro.detalle : "____________"}` : p);
+      const marcadas = maquila.map(m => m.proceso === "Otro" ? opcionesMaquila[opcionesMaquila.length - 1] : m.proceso);
       llenar("dTrabajo", [
         celda("Tipo", marcas(["Primera impresión", "Reimpresión"], [reimpresion ? "Reimpresión" : "Primera impresión"]), "s4"),
         celda("Proceso", d.procesoImpresion || "Por definir", "s4"),
-        celda("Maquila", marcas(o.maquilasDef || ["Imp. digital", "Suaje", "Barniz a registro", "Laminado"], maquila.map(m => m.proceso)), "s4"),
+        celda("Maquila", marcas(opcionesMaquila, marcadas), "s4"),
         celda("Proveedor de maquila", proveedores || null, "s4"),
         celda("Inicio", null),
         celda("Término", null),
